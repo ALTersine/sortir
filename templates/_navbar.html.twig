@@ -1,9 +1,7 @@
-{% set currentLogo = logo|default('logo1') %}
-
 <nav class="navbar bg-body-tertiary">
     <div class="container-fluid">
         <a class="navbar-brand d-flex justify-content-start align-items-end gap-3" href="">
-        <img src="{{ asset('images/' ~ currentLogo ~ '.png') }}" alt="logo {{ app_name }}"
+        <img src="{{ asset('images/' ~ rand_logo()) }}" alt="logo {{ app_name }}"
              width="150" height="145" class="d-inline-block align-text-top ">
         <p class="mb-3">{{ app_name }}</p></a>
 
