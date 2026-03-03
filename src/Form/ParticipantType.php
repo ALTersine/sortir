@@ -6,13 +6,18 @@ use App\Entity\Campus;
 use App\Entity\Participant;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Regex;
 
 class ParticipantType extends AbstractType
@@ -117,7 +122,36 @@ class ParticipantType extends AbstractType
                         'id' => self::START_ID . 'PasswordConfirmation',
                     ],
                 ],
-            ]);
+            ])
+            //Les champs liés aux images
+            ->add('image', FileType::class, [
+                'label' => 'Ma photo',
+                'required' => false,
+                'mapped' => false,
+                'help' => 'Taille maximum 1M. Seuls les formats .jpeg, .jpg, ou .png sont autorisés.',
+                'constraints' => [
+                    new File(
+                        maxSize: '1024k',
+                        maxSizeMessage: 'Fichier trop volumineux dépassant les 1M aurosiés',
+                        extensions: ['jpg', 'jpeg', 'png'],
+                        extensionsMessage: 'Mauvais format d\'image importé. Veuillez transmettre un fichier de format jpeg, jpg ou png' ,
+                    )
+                ]
+            ])
+
+            //gestion de la case à cocher pour supprimer l'image
+            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                $participant = $event->getData();
+                if ($participant && $participant->getNomFichierPhoto()) {
+                    $form = $event->getForm();
+                    $form->add('deleteImage', CheckboxType::class, [
+                        'label' => 'Supprimer l\'image du profil',
+                        'required' => false,
+                        'mapped' => false,
+                        'help' => "/!\ la supression sera définitive"
+                    ]);
+                }
+            });
     }
 
     public function configureOptions(OptionsResolver $resolver): void
