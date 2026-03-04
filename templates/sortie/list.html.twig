@@ -6,8 +6,10 @@
 
 
 {% block body %}
-    {# affiche tous les sorties #}
-    <h1>Toutes les sorties</h1>
+    {# filtre #}
+    {% include('_filter.html.twig') %}
+    {# affiche les sorties #}
+    <h2>Toutes les sorties</h2>
     <table class="table-sm table-bordered">
         <thead>
         <tr>

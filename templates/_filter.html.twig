@@ -1,0 +1,84 @@
+<div class="container-fluid mt-4">
+
+    <h2>Filtrer les sorties</h2>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <div class="row">
+
+                <!-- Colonne 1 -->
+                <div class="col-md-4 border-end">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Campus</label>
+                        <input type="text" class="form-control" placeholder="Ville">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nom contient</label>
+                        <input type="text" class="form-control" placeholder="Recherche">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label fw-bold">Entre</label>
+                            <input type="date" class="form-control">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-bold">Et</label>
+                            <input type="date" class="form-control">
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Colonne 2 -->
+                <div class="col-md-4 border-end d-flex justify-content-center align-items-center">
+                    <div class="d-flex flex-column gap-2 text-start w-auto">
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="org">
+                            <label class="form-check-label" for="org">
+                                Sorties dont je suis l'organisateur
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="inscrit">
+                            <label class="form-check-label" for="inscrit">
+                                Sorties auxquelles je suis inscrit
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="pasinscrit">
+                            <label class="form-check-label" for="pasinscrit">
+                                Sorties auxquelles je ne suis pas inscrit
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="terminees">
+                            <label class="form-check-label" for="terminees">
+                                Sorties terminées
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Colonne 3 -->
+                <div class="col-md-4 d-flex align-items-center justify-content-center">
+
+                    <button class="btn btn-primary w-75">
+                        Rechercher
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
