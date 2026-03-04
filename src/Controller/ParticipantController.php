@@ -7,6 +7,8 @@ use App\Form\ParticipantType;
 use App\Repository\ParticipantRepository;
 use App\Util\FormParticipant;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,11 +56,15 @@ final class ParticipantController extends AbstractController
                 //Je perdais le campus à la soumission à cause du disbled, je le réinjecte ici.
                 $participant->setCampus($campus);
 
+                //Gestion du maj mdp si le champ a été rempli
                 $pwdChanged = $form->get('newPassword')->getData();
                 if (!empty($pwdChanged)) {
                     $participant->setPassword($toHash->hashPassword($participant, $pwdChanged));
 
                 }
+
+                //Appel au service pour gérer la supression ou l'import d'image
+                $participant = $service->updateImg($participant, $form);
 
                 $em->flush();
 
@@ -68,6 +74,7 @@ final class ParticipantController extends AbstractController
         } catch (ParticipantNotFound $e) {
             $this->addFlash('danger', $e->getMessage());
             return $this->redirectToRoute('sortie_liste');
+        } catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
         }
 
         return $this->render('participant/base.html.twig', [
