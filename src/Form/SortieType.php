@@ -12,19 +12,20 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SortieCreateType extends AbstractType
+class SortieType extends AbstractType
 {
-    /**
-     * Format spécial car à la création, l'entité Lieu n'est pas lié à la sortie
-     * On crée à partir du controleur le lieu qui sera référé à cette sortie
-     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        /**
+         * Attention ce formulaire nécessite que dans le controller, on gère les affiliations au lieu
+         * Les champs lieux ne sont pas mapped, seul la ville est géré automatiquement à partir du Code Postal
+         */
         $builder
             ->add('nom', TextType::class, [
                 'label' => 'Nom de la sortie',
@@ -98,6 +99,12 @@ class SortieCreateType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'help' => 'Si vous le souhaitez, faciliter vos retrouvaille en indiquant les coordonées GPS du lieu de rencontre',
+            ])
+            ->add('enregistrer', SubmitType::class,[
+                'label' => 'Enregistrer',
+            ])
+            ->add('publier', SubmitType::class,[
+                'label' => 'Publier',
             ])
         ;
     }

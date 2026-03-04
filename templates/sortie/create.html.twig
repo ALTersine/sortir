@@ -6,6 +6,9 @@
 
 
 {% block section %}
-    {# todo: affiche le formulaire de création de sortie #}
     <h1>Créer une sortie</h1>
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+
 {% endblock %}

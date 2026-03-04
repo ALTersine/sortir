@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Etat;
+use App\Enum\EtatSortie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

@@ -24,7 +24,7 @@ class Lieu
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $coordonneesGps = null;
 
-    #[ORM\ManyToOne(inversedBy: 'lieus')]
+    #[ORM\ManyToOne(inversedBy: 'lieux')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Ville $codePostal = null;
 

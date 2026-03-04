@@ -2,10 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\Lieu;
 use App\Entity\Sortie;
+use App\Enum\EtatSortie;
+use App\Form\SortieType;
+use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
-use App\SortieService\Etat;
+use App\SortieService\EtatManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -47,12 +53,46 @@ final class SortieController extends AbstractController
     }
 
     #[Route('/creer', name: 'sortie_create', methods: ['GET', 'POST'])]
-    public function create(): Response
+    public function create(
+        Request $request,
+        EntityManagerInterface $em,
+        EtatManager $serviceEtat,
+        Security $security,
+    ): Response
     {
-        //todo: traiter le formulaire d'ajout de sortie
+        $newSortie = new Sortie();
+        $newLieu = new Lieu();
+        $form = $this->createForm(SortieType::class, $newSortie);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $newLieu->setName($form->get('lieuNom')->getData());
+            $newLieu->setRue($form->get('lieuRue')->getData());
+            $newLieu->setCodePostal($form->get('lieuCodePostal')->getData());
+            $newLieu->setCoordonneesGps($form->get('lieuCoordonnees')->getData());
+
+            $em->persist($newSortie);
+
+            $newSortie->addLieux($newLieu);
+
+            $newSortie->setOrganisateur($security->getUser());
+
+            if($form->get('publier')->isClicked()) {
+                $newSortie->setEtat($serviceEtat->getRightEtat(EtatSortie::OUVERTE));
+                $newSortie->setPublished(true);
+            }else{
+                $newSortie->setEtat($serviceEtat->getRightEtat(EtatSortie::EN_CREATION));
+            }
+            $em->persist($newLieu);
+
+            $em->flush();
+
+            $this->addFlash('success','La sortie est prête ! Découvrez en tous les détails ici');
+            return $this->redirectToRoute('sortie_show', ['id' => $newSortie->getId()]);
+        }
 
         return $this->render('sortie/create.html.twig',[
-            //todo:passer le formulaire à twig
+            'form' => $form,
         ]);
     }
 
