@@ -46,15 +46,21 @@ class FormParticipant
     {
         //Suppression de l'img si demandée
         if ($form->has('deleteImage') && $form->get('deleteImage')->getData()) {
-            unlink($this->container->get('app.project_images_directory') . '/' . $participant->getNomFichierPhoto());
-            $participant->setNomFichierPhoto(null);
+            $this->suppImg($participant);
         }
 
         //Ajout de l'img si soumise
         $imgDuFom = $form->get('image')->getData();
+
         if ($imgDuFom) {
-            $originalName = pathinfo($imgDuFom->getClientOriginalName(), PATHINFO_FILENAME);
-            $safeFileName = $this->slug->slug($originalName);
+
+            //Au cas où c'est un remplacement d'image déjà existante
+            if($participant->getNomFichierPhoto()){
+                $this->suppImg($participant);
+            }
+
+            $setName = pathinfo($participant->getPseudo(), PATHINFO_FILENAME);
+            $safeFileName = $this->slug->slug($setName);
             $newFileName = $safeFileName . '-' . uniqid() . '.' . $imgDuFom->guessExtension();
 
             try {
@@ -67,5 +73,10 @@ class FormParticipant
             $participant->setNomFichierPhoto($newFileName);
         }
         return $participant;
+    }
+
+    private function suppImg(Participant $participant): void{
+        unlink($this->container->get('app.project_images_directory') . '/' . $participant->getNomFichierPhoto());
+        $participant->setNomFichierPhoto(null);
     }
 }
