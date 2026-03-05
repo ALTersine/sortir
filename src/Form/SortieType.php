@@ -68,7 +68,8 @@ class SortieType extends AbstractType
             ->add('infosSortie', TextareaType::class, [
                 'label' => 'Description et infos',
                 'attr'=>[
-                    'placeholder' => 'Donnez plus d\'information sur votre sortie'
+                    'placeholder' => 'Donnez plus d\'information sur votre sortie',
+                    'rows'=>5
                 ]
             ])
             ->add('campus', EntityType::class, [
@@ -110,13 +111,19 @@ class SortieType extends AbstractType
                 ],
                 'mapped' => false,
                 'required' => false,
-                'help' => 'Si vous le souhaitez, faciliter vos retrouvaille en indiquant les coordonées GPS du lieu de rencontre',
+                'help' => 'Si vous le souhaitez, facilitez vos retrouvailles en indiquant les coordonées GPS du lieu de rencontre',
             ])
             ->add('enregistrer', SubmitType::class,[
                 'label' => 'Enregistrer',
+                'attr'=>[
+                    'class' => 'btn btn-info text-white',
+                ]
             ])
             ->add('publier', SubmitType::class,[
                 'label' => 'Publier',
+                'attr'=>[
+                    'class' => 'btn btn-primary',
+                ]
             ])
         ;
     }

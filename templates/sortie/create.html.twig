@@ -6,9 +6,46 @@
 
 
 {% block section %}
-    <h1>Créer une sortie</h1>
     {{ form_start(form) }}
-    {{ form_widget(form) }}
+    <div class="d-flex justify-content-center align-items-center row m-3">
+        <div class="col-12 d-flex justify-content-center align-content-around">
+            <h1>Créer une sortie</h1>
+        </div>
+        <div class="col-sm-12 col-md-6 justify-content-center align-content-around">
+            {{ form_row(form.nom) }}
+            {{ form_row(form.dateHeureDebut) }}
+            {{ form_row(form.dateLimiteInscription) }}
+            {{ form_row(form.nbInscriptionMax) }}
+            {{ form_row(form.duree) }}
+        </div>
+        <div class="col-sm-12 col-md-6 justify-content-center">
+            {{ form_row(form.campus) }}
+            {{ form_row(form.lieuNom) }}
+            {{ form_row(form.lieuRue) }}
+            {{ form_row(form.lieuCodePostal) }}
+            {{ form_row(form.lieuCoordonnees) }}
+        </div>
+        <div class="col-12 ustify-content-center align-content-around">
+            {{ form_row(form.infosSortie) }}
+        </div>
+        <div class="row gap-2 justify-content-center align-content-around">
+            <div class="col-12 col-sm-3 d-flex justify-content-center">
+                {{ form_row(form.enregistrer) }}
+            </div>
+            <div class="col-12 col-sm-3 d-flex justify-content-center">
+                {{ form_row(form.publier) }}
+            </div>
+            <div class="col-12 col-sm-3 d-flex justify-content-center">
+                <div class="mb-3">
+                    <a href="{{ path('sortie_liste') }}" class="text-decoration-none text-white">
+                        <button type="button" class="btn btn-secondary">
+                            Retour à la liste
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
     {{ form_end(form) }}
 
 {% endblock %}
