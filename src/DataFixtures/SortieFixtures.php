@@ -48,7 +48,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
             $sortie->setNbInscriptionMax($inscriptionMax);
             $sortie->setInfosSortie($faker->text(200));
             $sortie->setPublished($faker->boolean(70));
-            $sortie->setEtat($this->getReference('1', Etat::class));
+            $sortie->setEtat($this->getReference('etat_' . $faker->numberBetween(1,8), Etat::class));
 
             $nbInscrits = $faker->numberBetween(0, $inscriptionMax);
 
