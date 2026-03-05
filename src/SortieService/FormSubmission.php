@@ -77,8 +77,15 @@ class FormSubmission
     }
 
     public function ExceptionIfCannotUpdateSortie(Sortie $sortie) : void {
+        if($sortie->getOrganisateur() !== $this->participantService->getParticipant()) {
+            throw new SortieIllegalUpdate(
+                'Seul l\'organisateur peut modifier cette sortie'
+            );
+        }
         if($sortie->getEtat() !== $this->etatService->getRightEtat(EtatSortie::EN_CREATION)){
-            throw new SortieIllegalUpdate();
+            throw new SortieIllegalUpdate(
+                'La sortie est déjà publiée, vous ne pouvez plus la mettre à jour.'
+            );
         }
     }
 
