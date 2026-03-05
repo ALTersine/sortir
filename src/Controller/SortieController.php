@@ -89,7 +89,8 @@ final class SortieController extends AbstractController
 
         return $this->render('sortie/create.html.twig', [
             'form' => $form,
-            'titleAndH1' => 'Créer une sortie'
+            'titleAndH1' => 'Créer une sortie',
+            'allowRemove' => false,
         ]);
     }
 
@@ -122,10 +123,10 @@ final class SortieController extends AbstractController
                     return $this->redirectToRoute('sortie_liste');
                 }
 
-                $formSubmission->updateSortie($sortie, $form);
+                $formSubmission->updateSortie($infoCampus, $sortie, $form);
 
                 $this->addFlash('success', 'La sortie a bien été mise à jour !');
-                return $this->redirectToRoute('sortie_show', ['id' => $sortie->getId()]);
+                return $this->redirectToRoute('sortie_show', ['id' => $id]);
 
             }
 
@@ -136,7 +137,8 @@ final class SortieController extends AbstractController
 
         return $this->render('sortie/create.html.twig', [
             'form' => $form,
-            'titleAndH1' => 'Mise à jour d\'une sortie'
+            'titleAndH1' => 'Mise à jour d\'une sortie',
+            'allowRemove' => true,
         ]);
     }
 }

@@ -19,10 +19,10 @@ use Symfony\Component\Form\FormInterface;
 class FormSubmission
 {
     public function __construct(
-        private readonly EtatManager           $etatService,
-        private readonly FromUserToParticipant $participantService,
-        private readonly LieuManager        $lieuService,
-        private readonly SortieRepository      $sortieRepo,
+        private readonly EtatManager            $etatService,
+        private readonly FromUserToParticipant  $participantService,
+        private readonly LieuManager            $lieuService,
+        private readonly SortieRepository       $sortieRepo,
         private readonly EntityManagerInterface $em,
     )
     {
@@ -69,7 +69,8 @@ class FormSubmission
         }
     }
 
-    public function getRightSortie(int $id) : Sortie {
+    public function getRightSortie(int $id): Sortie
+    {
         $sortie = $this->sortieRepo->findWithJointure($id);
         if (null === $sortie) {
             throw new SortieNotFound();
@@ -77,11 +78,15 @@ class FormSubmission
         return $sortie;
     }
 
-    public function removeSortie(Sortie $sortie): void {
+    public function removeSortie(Sortie $sortie): void
+    {
         //todo : gestion de la suppresion
     }
 
-    public function updateSortie(Sortie $sortie, FormInterface $form): void {
+    public function updateSortie(Campus $campus, Sortie $sortie, FormInterface $form): void
+    {
+        $sortie->setCampus($campus);
+
         //Réinitialise le statut publié
         $sortie->setPublished(false);
 

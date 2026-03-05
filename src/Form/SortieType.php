@@ -125,6 +125,12 @@ class SortieType extends AbstractType
                     'class' => 'btn btn-primary',
                 ]
             ])
+            ->add('supprimer', SubmitType::class,[
+                'label' => 'Supprimer',
+                'attr'=>[
+                    'class' => 'btn btn-danger',
+                ]
+            ])
         ;
     }
 
