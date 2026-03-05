@@ -4,9 +4,17 @@ namespace App\SortieService;
 
 use App\Entity\Sortie;
 use App\Enum\EtatSortie;
+use App\Exception\EtatError;
+use App\Repository\EtatRepository;
 
-class Etat
+class EtatManager
 {
+    public function __construct(
+        private readonly EtatRepository $etatRepository,
+    )
+    {
+    }
+
     public function getEtat(Sortie $sortie): EtatSortie
     {
         $now = new \DateTimeImmutable();
@@ -42,5 +50,15 @@ class Etat
         }
 
         return EtatSortie::OUVERTE;
+    }
+
+    public function getRightEtat(EtatSortie $etat): \App\Entity\Etat {
+        $etat = $this->etatRepository->find($etat->value);
+
+        if(!$etat){
+            throw new EtatError('L\'état transmis est introuvable');
+        }
+
+        return $etat;
     }
 }

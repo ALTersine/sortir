@@ -22,7 +22,7 @@ security:
             form_login:
                 login_path: app_login
                 check_path: app_login
-                default_target_path: app_actif
+                default_target_path: sortie_liste
                 enable_csrf: true
             logout:
                 path: app_logout
