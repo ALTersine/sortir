@@ -22,7 +22,7 @@ final class ParticipantController extends AbstractController
     /******* Routes sur un participant connecté, faisant appel au service pour returner le user ********/
     #[Route('', name: '_read', methods: ['GET'])]
     public function index(
-        ImgManager $service,
+        ImgManager            $service,
         FromUserToParticipant $rightParticipant
     ): Response
     {
@@ -43,7 +43,7 @@ final class ParticipantController extends AbstractController
     #[Route('/update', name: '_update', methods: ['GET', 'POST'])]
     public function update(
         ImgManager                  $service,
-        FromUserToParticipant $rightParticipant,
+        FromUserToParticipant       $rightParticipant,
         UserPasswordHasherInterface $toHash,
         EntityManagerInterface      $em,
         Request                     $request
@@ -71,7 +71,7 @@ final class ParticipantController extends AbstractController
 
                 $em->flush();
 
-                $this->addFlash('success','Ton profil vient d\'être mis à jour !');
+                $this->addFlash('success', 'Ton profil vient d\'être mis à jour !');
                 return $this->redirectToRoute('app_participant_read');
             }
         } catch (ParticipantNotFound $e) {
@@ -89,7 +89,7 @@ final class ParticipantController extends AbstractController
     }
 
     /******* Routes standard pour afficher les infos d'un participant ********/
-    #[Route('/{id}', name: '_show', requirements: ['id'=>'\d+'] ,methods: ['GET'])]
+    #[Route('/{id}', name: '_show', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function display(
         ImgManager            $service,
         int                   $id,
@@ -98,7 +98,7 @@ final class ParticipantController extends AbstractController
     {
         $participantCo = $repo->find($id);
 
-        if(!$participantCo){
+        if (!$participantCo) {
             throw new ParticipantNotFound(
                 'Aucun participant correspondant',
                 Response::HTTP_NOT_FOUND

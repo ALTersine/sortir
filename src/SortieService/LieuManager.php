@@ -18,4 +18,13 @@ class LieuManager
         return $newLieu;
     }
 
+    public function setLieuInput(FormInterface $form, Sortie $sortie): void{
+        foreach($sortie->getLieux() as $lieu){
+            $form->get('lieuNom')->setData($lieu->getName());
+            $form->get('lieuRue')->setData($lieu->getRue());
+            $form->get('lieuCodePostal')->setData($lieu->getCodePostal());
+            $form->get('lieuCoordonnees')->setData($lieu->getCoordonneesGps());
+        }
+    }
+
 }

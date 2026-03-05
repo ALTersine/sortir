@@ -12,6 +12,7 @@ use App\Repository\CampusRepository;
 use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
 use App\SortieService\EtatManager;
+use App\SortieService\FormSubmission;
 use App\SortieService\LieuManager;
 use App\Util\FromUserToParticipant;
 use Doctrine\ORM\EntityManagerInterface;
@@ -61,21 +62,14 @@ final class SortieController extends AbstractController
     public function create(
         Request                $request,
         EntityManagerInterface $em,
-        EtatManager            $serviceEtat,
-        FromUserToParticipant  $participantService,
+        FormSubmission         $sortieService,
         LieuManager            $lieuService,
     ): Response
     {
 
         try {
-            $newSortie = new Sortie();
-
-            $infoOrganisateur = $participantService->getParticipant();
-            $infoCampus = $infoOrganisateur->getCampus();
-
-            $newSortie->setOrganisateur($infoOrganisateur);
-            $newSortie->setCampus($infoCampus);
-
+            $newSortie = $sortieService->initialSortie();
+            $infoCampus = $newSortie->getCampus();
 
             $form = $this->createForm(SortieType::class, $newSortie, [
                 'CampusToUseAsFilter' => $infoCampus
@@ -84,21 +78,17 @@ final class SortieController extends AbstractController
 
             if ($form->isSubmitted() && $form->isValid()) {
 
+                //Gestion du lieu affilié à la sortie
                 $lieu = $lieuService->createLieuFromSortie($form);
                 $em->persist($lieu);
 
-                $newSortie->addLieux($lieu);
-
-                //Toujours le même souci sur le campus...
-                $newSortie->setCampus($infoCampus);
-
-                if ($form->get('publier')->isClicked()) {
-                    $newSortie->setEtat($serviceEtat->getRightEtat(EtatSortie::OUVERTE));
-                    $newSortie->setPublished(true);
-                } else {
-                    $newSortie->setEtat($serviceEtat->getRightEtat(EtatSortie::EN_CREATION));
-                }
-
+                //Gestion de la sortie avec toutes ses particularités
+                $sortieService->setSortieSpecificationsFromCreate(
+                    $lieu,
+                    $infoCampus,
+                    $form,
+                    $newSortie
+                );
                 $em->persist($newSortie);
 
                 $em->flush();
@@ -113,17 +103,20 @@ final class SortieController extends AbstractController
 
         return $this->render('sortie/create.html.twig', [
             'form' => $form,
+            'titleAndH1' => 'Créer une sortie'
         ]);
     }
 
     #[Route('/{id}/modifier', name: 'sortie_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
-    public function edit($id): Response
+    public function edit(
+        int $id
+    ): Response
     {
         //todo:aller chercher la sortie à modifier dans la bdd
 
         //todo: traiter le formulaire de modification de sortie
 
-        return $this->render('sortie/edit.html.twig', [
+        return $this->render('sortie/create.html.twig', [
             //todo:passer le formulaire à twig
         ]);
     }

@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {{ parent() }}Création d'une sortie
+    {{ parent() }}{{ titleAndH1 }}
 {% endblock %}
 
 
@@ -9,7 +9,7 @@
     {{ form_start(form) }}
     <div class="d-flex justify-content-center align-items-center row m-3">
         <div class="col-12 d-flex justify-content-center align-content-around">
-            <h1>Créer une sortie</h1>
+            <h1>{{ titleAndH1 }}</h1>
         </div>
         <div class="col-sm-12 col-md-6 justify-content-center align-content-around">
             {{ form_row(form.nom) }}

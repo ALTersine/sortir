@@ -6,6 +6,7 @@ use App\Entity\Sortie;
 use App\Enum\EtatSortie;
 use App\Exception\EtatError;
 use App\Repository\EtatRepository;
+use Symfony\Component\Form\FormInterface;
 
 class EtatManager
 {
@@ -60,5 +61,14 @@ class EtatManager
         }
 
         return $etat;
+    }
+
+    public function setSortieEtatFromCreate(Sortie $sortie, FormInterface $form): void{
+        if ($form->get('publier')->isClicked()) {
+            $sortie->setEtat($this->getRightEtat(EtatSortie::OUVERTE));
+            $sortie->setPublished(true);
+        } else {
+            $sortie->setEtat($this->getRightEtat(EtatSortie::EN_CREATION));
+        }
     }
 }
