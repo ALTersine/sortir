@@ -57,6 +57,14 @@ class SortieRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    public function findUnarchived(): array{
+        return $this->createQueryBuilder('s')
+            ->where('s.archived = :archived')
+            ->setParameter('archived', false)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Sortie[] Returns an array of Sortie objects
     //     */

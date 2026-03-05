@@ -18,9 +18,10 @@ class EtatManager
 
     public function getEtat(Sortie $sortie): EtatSortie
     {
-        $now = new \DateTimeImmutable();
+        $now = new \DateTimeImmutable('now');
 
-        if ($sortie->isArchived()) {
+        $expiration = $sortie->getDateHeureDebut()->add(new \DateInterval("P1M"));
+        if ($now >= $expiration ) {
             return EtatSortie::HISTORISEE;
         }
 
@@ -59,6 +60,9 @@ class EtatManager
         $etat = $this->etatRepository->find($idEtat);
         if(!$etat){
             throw new EtatError('L\'état transmis est introuvable');
+        }
+        elseif ($etat->getId() === 7 && $sortie->isArchived() !== true) {
+            $sortie->setArchived(true);
         }
 
         $sortie->setEtat($etat);
