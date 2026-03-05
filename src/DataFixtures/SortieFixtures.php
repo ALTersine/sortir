@@ -4,8 +4,11 @@ namespace App\DataFixtures;
 
 use App\Entity\Campus;
 use App\Entity\Etat;
+use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\Entity\Sortie;
+use App\Entity\Ville;
+use App\SortieService\EtatManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -13,6 +16,13 @@ use Symfony\Component\Validator\Constraints\Length;
 
 class SortieFixtures extends Fixture implements DependentFixtureInterface
 {
+
+    public function __construct(
+        private EtatManager $etatService,
+    )
+    {
+    }
+
     public function load(ObjectManager $manager): void
     {
         $faker = \Faker\Factory::create('fr_FR');
@@ -47,8 +57,6 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
             $inscriptionMax = $faker->numberBetween(2, 200);
             $sortie->setNbInscriptionMax($inscriptionMax);
             $sortie->setInfosSortie($faker->text(200));
-            $sortie->setPublished($faker->boolean(70));
-            $sortie->setEtat($this->getReference($faker->numberBetween(1,8), Etat::class));
 
             $nbInscrits = $faker->numberBetween(0, $inscriptionMax);
 
@@ -65,7 +73,19 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
                 'LA ROCHE SUR YON'
             ];
 
-            $sortie->setCampus($this->getReference($faker->randomElement($campusNames), Campus::class));
+            $campus = $faker->randomElement($campusNames);
+            $sortie->setCampus($this->getReference($campus, Campus::class));
+
+            /**
+             * Choix aléatoire entre les options annulé, archivé ou publié.
+             * Calcul ensuite réel de l'état sinon j'ai des exceptions illogiques qui se produisent
+             */
+            $sortie->setPublished($faker->boolean(70));
+            $sortie->setArchived($faker->boolean(70));
+            $sortie->setCancel($faker->boolean(70));
+            $this->etatService->settingEtat($sortie);
+
+            $this->addReference('sortie' . $i, $sortie);
 
             $manager->persist($sortie);
         }

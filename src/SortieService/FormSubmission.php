@@ -9,6 +9,7 @@ use App\Exception\EtatError;
 use App\Exception\ParticipantNotFound;
 use App\Exception\SortieIllegalUpdate;
 use App\Exception\SortieNotFound;
+use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
 use App\Util\FromUserToParticipant;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,6 +19,7 @@ class FormSubmission
 {
     public function __construct(
         private readonly EtatManager            $etatService,
+        private readonly EtatRepository         $etatRepo,
         private readonly FromUserToParticipant  $participantService,
         private readonly LieuManager            $lieuService,
         private readonly SortieRepository       $sortieRepo,
@@ -54,7 +56,7 @@ class FormSubmission
 
             $sortie->addLieux($lieu);
             $sortie->setCampus($campus);
-            $this->etatService->setSortieEtat($sortie, $form);
+            $this->etatService->setSortieEtatFromForm($sortie, $form);
 
             $this->em->persist($sortie);
 
@@ -76,13 +78,14 @@ class FormSubmission
         return $sortie;
     }
 
-    public function ExceptionIfCannotUpdateSortie(Sortie $sortie) : void {
-        if($sortie->getOrganisateur() !== $this->participantService->getParticipant()) {
+    public function ExceptionIfCannotUpdateSortie(Sortie $sortie): void
+    {
+        if ($sortie->getOrganisateur() !== $this->participantService->getParticipant()) {
             throw new SortieIllegalUpdate(
                 'Seul l\'organisateur peut modifier cette sortie'
             );
         }
-        if($sortie->getEtat() !== $this->etatService->getRightEtat(EtatSortie::EN_CREATION)){
+        if ($sortie->getEtat() !== $this->etatRepo->find(1)) {
             throw new SortieIllegalUpdate(
                 'La sortie est déjà publiée, vous ne pouvez plus la mettre à jour.'
             );
@@ -103,7 +106,7 @@ class FormSubmission
             $this->em->persist($lieu);
         }
 
-        $this->etatService->setSortieEtat($sortie, $form);
+        $this->etatService->setSortieEtatFromForm($sortie, $form);
         $this->em->persist($sortie);
 
         $this->em->flush();

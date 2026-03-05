@@ -20,20 +20,15 @@ class EtatManager
     {
         $now = new \DateTimeImmutable();
 
-        if ($sortie->isCancel()) {
-            return EtatSortie::ANNULEE;
-        }
-
         if ($sortie->isArchived()) {
             return EtatSortie::HISTORISEE;
         }
 
-        if ($sortie->isPublished()) {
-            return EtatSortie::OUVERTE;
+        if ($sortie->isCancel()) {
+            return EtatSortie::ANNULEE;
         }
 
         $fin = $sortie->getDateHeureDebut()->add(new \DateInterval("PT{$sortie->getDuree()}M"));
-
         if ($now > $fin) {
             return EtatSortie::TERMINEE;
         }
@@ -44,30 +39,37 @@ class EtatManager
 
         $complet = $sortie->getInscrits()->count() >= $sortie->getNbInscriptionMax();
         $dateLimiteDepassee = $now > $sortie->getDateLimiteInscription();
-
         if ($complet || $dateLimiteDepassee) {
             return EtatSortie::CLOTUREE;
+        }
+
+        if ($sortie->isPublished()) {
+            return EtatSortie::OUVERTE;
         }
 
         return EtatSortie::EN_CREATION;
     }
 
-    public function getRightEtat(EtatSortie $etat): \App\Entity\Etat {
-        $etat = $this->etatRepository->find($etat->value);
+    public function settingEtat(Sortie $sortie): void {
+        $idEtat = $this->getEtat($sortie)->value;
+        if(!$idEtat) {
+            throw new EtatError('Erreur dans l\'attribution de l\'état de la sortie');
+        }
 
+        $etat = $this->etatRepository->find($idEtat);
         if(!$etat){
             throw new EtatError('L\'état transmis est introuvable');
         }
 
-        return $etat;
+        $sortie->setEtat($etat);
     }
 
-    public function setSortieEtat(Sortie $sortie, FormInterface $form): void{
+    public function setSortieEtatFromForm(Sortie $sortie, FormInterface $form): void{
         if ($form->get('publier')->isClicked()) {
             $sortie->setPublished(true);
         }
         try {
-            $sortie->setEtat($this->getRightEtat($this->getEtat($sortie)));
+            $this->settingEtat($sortie);
         } catch (EtatError $e) {
             throw new EtatError($e->getMessage());
         }

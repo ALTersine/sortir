@@ -22,20 +22,25 @@ class VilleFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $campusDispo = [
-            '44'=>$this->getReference('SAINT-HERBLAIN', Campus::class),
-            '35'=>$this->getReference('CHARTRES DE BRETAGNE', Campus::class),
-            '85'=>$this->getReference('LA ROCHE SUR YON', Campus::class)
+            '44' => $this->getReference('SAINT-HERBLAIN', Campus::class),
+            '35' => $this->getReference('CHARTRES DE BRETAGNE', Campus::class),
+            '85' => $this->getReference('LA ROCHE SUR YON', Campus::class)
         ];
 
         foreach ($campusDispo as $idCampus => $campus) {
             $pathFichierJson = $this->buildPath($idCampus);
             $data = json_decode(file_get_contents($pathFichierJson), true);
 
+            $i = 0;
+
             foreach ($data as $info) {
+                $i++;
                 $ville = new Ville();
                 $ville->setCodePostal($info['codesPostaux'][0]);
                 $ville->setName($info['nom']);
                 $ville->setCampus($campus);
+
+                $this->addReference($campus . $i, $ville);
 
                 $manager->persist($ville);
             }
@@ -48,7 +53,8 @@ class VilleFixtures extends Fixture implements DependentFixtureInterface
         return [CampusFixtures::class];
     }
 
-    private function buildPath(string $idCampus): string{
-        return $this->param->get('kernel.project_dir').'\src\DataFixtures\data\response'.$idCampus.'.json';
+    private function buildPath(string $idCampus): string
+    {
+        return $this->param->get('kernel.project_dir') . '\src\DataFixtures\data\response' . $idCampus . '.json';
     }
 }
