@@ -3,14 +3,12 @@
 namespace App\SortieService;
 
 use App\Entity\Campus;
-use App\Entity\Lieu;
 use App\Entity\Sortie;
 use App\Enum\EtatSortie;
 use App\Exception\EtatError;
 use App\Exception\ParticipantNotFound;
+use App\Exception\SortieIllegalUpdate;
 use App\Exception\SortieNotFound;
-use App\Repository\EtatRepository;
-use App\Repository\LieuRepository;
 use App\Repository\SortieRepository;
 use App\Util\FromUserToParticipant;
 use Doctrine\ORM\EntityManagerInterface;
@@ -76,6 +74,12 @@ class FormSubmission
             throw new SortieNotFound();
         }
         return $sortie;
+    }
+
+    public function ExceptionIfCannotUpdateSortie(Sortie $sortie) : void {
+        if($sortie->getEtat() !== $this->etatService->getRightEtat(EtatSortie::EN_CREATION)){
+            throw new SortieIllegalUpdate();
+        }
     }
 
     public function removeSortie(Sortie $sortie): void

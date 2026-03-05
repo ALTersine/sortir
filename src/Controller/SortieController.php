@@ -8,6 +8,7 @@ use App\Enum\EtatSortie;
 use App\Exception\EtatError;
 use App\Exception\LieuNotFound;
 use App\Exception\ParticipantNotFound;
+use App\Exception\SortieIllegalUpdate;
 use App\Exception\SortieNotFound;
 use App\Form\SortieType;
 use App\Repository\CampusRepository;
@@ -108,6 +109,8 @@ final class SortieController extends AbstractController
             $update = true;
 
             $sortie = $formSubmission->getRightSortie($id);
+            $formSubmission->ExceptionIfCannotUpdateSortie($sortie);
+
             $infoCampus = $sortie->getCampus();
 
             $form = $this->createForm(SortieType::class, $sortie, [
@@ -135,7 +138,7 @@ final class SortieController extends AbstractController
 
             }
 
-        } catch (SortieNotFound|LieuNotFound $e) {
+        } catch (SortieNotFound|LieuNotFound|SortieIllegalUpdate $e) {
             $this->addFlash('danger', $e->getMessage());
             return $this->redirectToRoute('sortie_liste');
         }

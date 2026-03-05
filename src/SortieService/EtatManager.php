@@ -28,7 +28,7 @@ class EtatManager
             return EtatSortie::HISTORISEE;
         }
 
-        if (!$sortie->isPublished()) {
+        if ($sortie->isPublished()) {
             return EtatSortie::OUVERTE;
         }
 
