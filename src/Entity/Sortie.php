@@ -71,7 +71,7 @@ class Sortie
 
     #[ORM\Column(options: ['default' => false])]
     #[Assert\NotNull]
-    private ?bool $Archived = false;
+    private ?bool $archived = false;
 
     #[ORM\ManyToOne(inversedBy: 'sortiesOrganisateur')]
     #[ORM\JoinColumn(nullable: false)]
@@ -209,12 +209,12 @@ class Sortie
 
     public function isArchived(): ?bool
     {
-        return $this->Archived;
+        return $this->archived;
     }
 
-    public function setArchived(bool $Archived): static
+    public function setArchived(bool $archived): static
     {
-        $this->Archived = $Archived;
+        $this->archived = $archived;
 
         return $this;
     }

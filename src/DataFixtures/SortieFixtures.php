@@ -46,12 +46,12 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
 
             $sortie->setNom($activite . ' à ' . $i);
 
-            $dateDebut = $faker->dateTimeBetween("-1 month", "+2 month");
+            $dateDebut = $faker->dateTimeBetween("-3 month", "+2 month");
             $sortie->setDateHeureDebut(\DateTimeImmutable::createFromMutable($dateDebut));
 
             $sortie->setDuree($faker->numberBetween(30, 120));
 
-            $dateLimite = $faker->dateTimeBetween('-2 month', $dateDebut->modify('-1 day'));
+            $dateLimite = $faker->dateTimeBetween($dateDebut->modify('-1 day'), $dateDebut);
             $sortie->setDateLimiteInscription(\DateTimeImmutable::createFromMutable($dateLimite));
 
             $inscriptionMax = $faker->numberBetween(2, 200);
@@ -84,7 +84,6 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
              * Calcul ensuite réel de l'état sinon j'ai des exceptions illogiques qui se produisent
              */
             $sortie->setPublished($faker->boolean(70));
-            $sortie->setArchived($faker->boolean(10));
             $sortie->setCancel($faker->boolean(10));
             $this->etatService->settingEtat($sortie);
 
