@@ -4,10 +4,10 @@ namespace App\Repository;
 
 use App\Entity\Sortie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
-use PhpParser\Node\Expr\Array_;
+
 
 /**
  * @extends ServiceEntityRepository<Sortie>
@@ -32,6 +32,15 @@ class SortieRepository extends ServiceEntityRepository
 
         return new Paginator($queryBuilder->getQuery());
     }
+
+    public function qbForList(): QueryBuilder
+    {
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.campus', 'c')->addSelect('c')
+            ->leftJoin('s.etat', 'e')->addSelect('e')
+            ->leftJoin('s.organisateur', 'o')->addSelect('o');
+    }
+
 
     //    /**
     //     * @return Sortie[] Returns an array of Sortie objects

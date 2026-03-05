@@ -11,23 +11,23 @@
                 <div class="col-md-4 border-end">
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Campus</label>
-                        <input type="text" class="form-control" placeholder="Ville">
+                        <label for="campus" class="form-label fw-bold">Campus</label>
+                        <select id="campus" class="form-select"></select>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Nom contient</label>
-                        <input type="text" class="form-control" placeholder="Recherche">
+                        <label for="search" class="form-label fw-bold">Nom contient</label>
+                        <input id="search" type="text" class="form-control" placeholder="search">
                     </div>
 
                     <div class="row">
                         <div class="col-6">
-                            <label class="form-label fw-bold">Entre</label>
-                            <input type="date" class="form-control">
+                            <label for="dateMin" class="form-label fw-bold">Entre</label>
+                            <input id="dateMin" type="date" class="form-control">
                         </div>
                         <div class="col-6">
-                            <label class="form-label fw-bold">Et</label>
-                            <input type="date" class="form-control">
+                            <label for="dateMax" class="form-label fw-bold">Et</label>
+                            <input id="dateMax" type="date" class="form-control">
                         </div>
                     </div>
 
@@ -38,8 +38,8 @@
                     <div class="d-flex flex-column gap-2 text-start w-auto">
 
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="org">
-                            <label class="form-check-label" for="org">
+                            <input class="form-check-input" type="checkbox" id="orga">
+                            <label class="form-check-label" for="orga">
                                 Sorties dont je suis l'organisateur
                             </label>
                         </div>
@@ -52,8 +52,8 @@
                         </div>
 
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="pasinscrit">
-                            <label class="form-check-label" for="pasinscrit">
+                            <input class="form-check-input" type="checkbox" id="nonInscrit">
+                            <label class="form-check-label" for="nonInscrit">
                                 Sorties auxquelles je ne suis pas inscrit
                             </label>
                         </div>
@@ -71,7 +71,7 @@
                 <!-- Colonne 3 -->
                 <div class="col-md-4 d-flex align-items-center justify-content-center">
 
-                    <button class="btn btn-primary w-75">
+                    <button type="button" class="btn btn-primary w-75" id="btnSearch">
                         Rechercher
                     </button>
 

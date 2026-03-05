@@ -8,5 +8,8 @@ import './stimulus_bootstrap.js';
 import 'bootstrap';  // Déclaration du JS de Bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css';  // Déclaration du CSS de Bootstrap
 import './styles/app.css';
+// import './js/sortieApi.js'
+// import './js/sortiesFilter.js'
+import './js/sorties.js';
 
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
