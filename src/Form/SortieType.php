@@ -116,9 +116,8 @@ class SortieType extends AbstractType
             ->add('lieuCP', TextType::class, [
                 'label' => 'Code postal',
                 'attr' => [
-                    'placeholder' => 'Autocomplétion selon le choix de ville',
                     'disabled' => true,
-                    'value' => $cpVille? $cpVille : ""
+                    'value' => $cpVille? $cpVille : "Autocomplétion selon le choix de ville"
                 ],
                 'mapped' => false,
                 'required' => false,

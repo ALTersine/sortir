@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function(){
 })
 
 function addCp(){
+    cpToFill.vale="";
     let villeID = villeSelected.value;
     let url = villeSelected.dataset.url;
 
