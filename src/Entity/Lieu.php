@@ -26,7 +26,7 @@ class Lieu
 
     #[ORM\ManyToOne(inversedBy: 'lieux')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Ville $codePostal = null;
+    private ?Ville $ville = null;
 
     /**
      * @var Collection<int, Sortie>
@@ -80,14 +80,14 @@ class Lieu
         return $this;
     }
 
-    public function getCodePostal(): ?Ville
+    public function getVille(): ?Ville
     {
-        return $this->codePostal;
+        return $this->ville;
     }
 
-    public function setCodePostal(?Ville $codePostal): static
+    public function setVille(?Ville $ville): static
     {
-        $this->codePostal = $codePostal;
+        $this->ville = $ville;
 
         return $this;
     }

@@ -14,7 +14,7 @@ class LieuManager
         $newLieu = new Lieu();
         $newLieu->setName($form->get('lieuNom')->getData());
         $newLieu->setRue($form->get('lieuRue')->getData());
-        $newLieu->setCodePostal($form->get('lieuCodePostal')->getData());
+        $newLieu->setVille($form->get('lieuVille')->getData());
         $newLieu->setCoordonneesGps($form->get('lieuCoordonnees')->getData());
         return $newLieu;
     }
@@ -26,7 +26,7 @@ class LieuManager
         foreach($sortie->getLieux() as $lieu){
             $form->get('lieuNom')->setData($lieu->getName());
             $form->get('lieuRue')->setData($lieu->getRue());
-            $form->get('lieuCodePostal')->setData($lieu->getCodePostal());
+            $form->get('lieuVille')->setData($lieu->getVille());
             $form->get('lieuCoordonnees')->setData($lieu->getCoordonneesGps());
         }
     }
@@ -38,8 +38,8 @@ class LieuManager
         if($lieu->getRue() !== $form->get('lieuRue')->getData()){
             $lieu->setRue($form->get('lieuRue')->getData());
         }
-        if($lieu->getCodePostal() !== $form->get('lieuCodePostal')->getData()){
-            $lieu->setCodePostal($form->get('lieuCodePostal')->getData());
+        if($lieu->getVille() !== $form->get('lieuVille')->getData()){
+            $lieu->setVille($form->get('lieuVille')->getData());
         }
         if($lieu->getCoordonneesGps() !== $form->get('lieuCoordonnees')->getData()){
             $lieu->setCoordonneesGps($form->get('lieuCoordonnees')->getData());

@@ -65,7 +65,7 @@
                         {% for lieu in sortie.lieux %}
                             <div class="row mb-2">
                                 <div class="col-6 fw-bold">Ville</div>
-                                <div class="col-6">{{ lieu.codePostal.name }}</div>
+                                <div class="col-6">{{ lieu.ville.name }}</div>
                             </div>
 
                             <div class="row mb-2">
@@ -80,7 +80,7 @@
 
                             <div class="row mb-2">
                                 <div class="col-6 fw-bold">Code postal</div>
-                                <div class="col-6">{{ lieu.codePostal.codePostal }}</div>
+                                <div class="col-6">{{ lieu.ville.codePostal }}</div>
                             </div>
 
                             {% if lieu.coordonneesGps %}

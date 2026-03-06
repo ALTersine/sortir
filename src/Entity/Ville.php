@@ -21,7 +21,7 @@ class Ville
     /**
      * @var Collection<int, Lieu>
      */
-    #[ORM\OneToMany(targetEntity: Lieu::class, mappedBy: 'codePostal')]
+    #[ORM\OneToMany(targetEntity: Lieu::class, mappedBy: 'ville')]
     private Collection $lieux;
 
     #[ORM\Column(length: 255)]
@@ -65,7 +65,7 @@ class Ville
     {
         if (!$this->lieux->contains($lieu)) {
             $this->lieux->add($lieu);
-            $lieu->setCodePostal($this);
+            $lieu->setVille($this);
         }
 
         return $this;
@@ -75,8 +75,8 @@ class Ville
     {
         if ($this->lieux->removeElement($lieu)) {
             // set the owning side to null (unless already changed)
-            if ($lieu->getCodePostal() === $this) {
-                $lieu->setCodePostal(null);
+            if ($lieu->getVille() === $this) {
+                $lieu->setVille(null);
             }
         }
 

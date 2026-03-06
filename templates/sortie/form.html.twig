@@ -20,9 +20,10 @@
         </div>
         <div class="col-sm-12 col-md-6 justify-content-center">
             {{ form_row(form.campus) }}
+            {{ form_row(form.lieuVille) }}
             {{ form_row(form.lieuNom) }}
             {{ form_row(form.lieuRue) }}
-            {{ form_row(form.lieuCodePostal) }}
+            {{ form_row(form.lieuCP) }}
             {{ form_row(form.lieuCoordonnees) }}
         </div>
         <div class="col-12 ustify-content-center align-content-around">
@@ -53,4 +54,11 @@
     </div>
     {{ form_end(form) }}
 
+{% endblock %}
+
+{% block javascripts %}
+    {% block importmap %}
+        {{ importmap('app') }}
+    {% endblock %}
+    <script src="{{ asset('scripts/findVilleCp.js') }}" defer></script>
 {% endblock %}

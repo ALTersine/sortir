@@ -17,6 +17,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SortieType extends AbstractType
@@ -25,6 +27,7 @@ class SortieType extends AbstractType
     {
         $campus = $options['CampusToUseAsFilter'];
         $update = $options['update'];
+        $infoVille = $options['dataUrlVille'];
 
         /**
          * Attention ce formulaire a de la logique qui dépend du controller Sortie:
@@ -80,6 +83,21 @@ class SortieType extends AbstractType
                     'disabled' => true,
                 ]
             ])
+            ->add('lieuVille', EntityType::class, [
+                'label' => 'Ville',
+                'class' => Ville::class,
+                'choice_label' => 'name',
+                'multiple' => false,
+                'mapped' => false,
+                'query_builder' => function (VilleRepository $repo) use ($campus) {
+                    return $repo->createQueryBuilder('v')
+                        ->where('v.campus = :campus')
+                        ->setParameter('campus', $campus);
+                },
+                'attr'=>[
+                    'data-url' => $infoVille
+                ]
+            ])
             ->add('lieuNom', TextType::class, [
                 'label' => 'Lieu',
                 'attr' => [
@@ -94,16 +112,14 @@ class SortieType extends AbstractType
                 ],
                 'mapped' => false,
             ])
-            ->add('lieuCodePostal', EntityType::class, [
-                'class' => Ville::class,
-                'choice_label' => 'codePostal',
-                'multiple' => false,
+            ->add('lieuCP', TextType::class, [
+                'label' => 'Code postal',
+                'attr' => [
+                    'placeholder' => 'Autocomplétion selon le choix de ville',
+                    'disabled' => true,
+                ],
                 'mapped' => false,
-                'query_builder' => function (VilleRepository $repo) use ($campus) {
-                    return $repo->createQueryBuilder('v')
-                        ->where('v.campus = :campus')
-                        ->setParameter('campus', $campus);
-                }
+                'required' => false,
             ])
             ->add('lieuCoordonnees', TextType::class, [
                 'label' => 'Latitude / Longitude',
@@ -144,6 +160,7 @@ class SortieType extends AbstractType
             'data_class' => Sortie::class,
             'CampusToUseAsFilter' => null,
             'update' => false,
+            'dataUrlVille' => null,
         ]);
     }
 }

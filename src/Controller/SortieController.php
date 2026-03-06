@@ -88,6 +88,7 @@ final class SortieController extends AbstractController
             $form = $this->createForm(SortieType::class, $newSortie, [
                 'CampusToUseAsFilter' => $infoCampus,
                 'update' => $update,
+                'dataUrlVille' => $this->generateUrl('app_ville_cp')
             ]);
             $form->handleRequest($request);
 

@@ -21,7 +21,7 @@ class LieuFixtures extends Fixture implements DependentFixtureInterface
             $lieu = new Lieu()
                 ->setName($faker->city())
                 ->setRue($faker->streetAddress())
-                ->setCodePostal(
+                ->setVille(
                     $this->getReference(
                         $sortie->getCampus()->getName() . ($faker->numberBetween(1, 10)), Ville::class
                     )
