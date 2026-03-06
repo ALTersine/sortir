@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', function(){
 })
 
 function addCp(){
-    const villeID = villeSelected.value;
-    const url = villeSelected.dataset.url;
+    let villeID = villeSelected.value;
+    let url = villeSelected.dataset.url;
 
     if(!villeID){
         cpToFill.value='';

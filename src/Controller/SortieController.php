@@ -127,9 +127,16 @@ final class SortieController extends AbstractController
 
             $infoCampus = $sortie->getCampus();
 
+            $cpVille = [];
+            foreach ($sortie->getLieux() as $lieu) {
+                $cpVille[] = $lieu->getVille()->getCodePostal();
+            }
+
             $form = $this->createForm(SortieType::class, $sortie, [
                 'CampusToUseAsFilter' => $infoCampus,
                 'update' => $update,
+                'dataUrlVille' => $this->generateUrl('app_ville_cp'),
+                'cpVilleOrigine' => $cpVille[0],
             ]);
 
             $lieuManager->setLieuInput($form, $sortie);

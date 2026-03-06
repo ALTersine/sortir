@@ -28,6 +28,7 @@ class SortieType extends AbstractType
         $campus = $options['CampusToUseAsFilter'];
         $update = $options['update'];
         $infoVille = $options['dataUrlVille'];
+        $cpVille  = $options['cpVilleOrigine'];
 
         /**
          * Attention ce formulaire a de la logique qui dépend du controller Sortie:
@@ -117,6 +118,7 @@ class SortieType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Autocomplétion selon le choix de ville',
                     'disabled' => true,
+                    'value' => $cpVille? $cpVille : ""
                 ],
                 'mapped' => false,
                 'required' => false,
@@ -161,6 +163,7 @@ class SortieType extends AbstractType
             'CampusToUseAsFilter' => null,
             'update' => false,
             'dataUrlVille' => null,
+            'cpVilleOrigine' => null
         ]);
     }
 }

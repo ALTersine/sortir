@@ -56,9 +56,7 @@
 
 {% endblock %}
 
-{% block javascripts %}
-    {% block importmap %}
-        {{ importmap('app') }}
-    {% endblock %}
+{% block scriptComplementaire %}
     <script src="{{ asset('scripts/findVilleCp.js') }}" defer></script>
 {% endblock %}
+
