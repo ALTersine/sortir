@@ -4,20 +4,18 @@ namespace App\SortieService;
 
 use App\Entity\Campus;
 use App\Entity\Sortie;
-use App\Enum\EtatSortie;
 use App\Exception\EtatError;
 use App\Exception\ParticipantNotFound;
+use App\Exception\SortieIllegalDisplay;
 use App\Exception\SortieIllegalUpdate;
 use App\Exception\SortieNotFound;
 use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
 use App\Util\FromUserToParticipant;
 use Doctrine\ORM\EntityManagerInterface;
-use http\Env\Request;
-use PhpParser\Node\Scalar\String_;
 use Symfony\Component\Form\FormInterface;
 
-class FormSubmission
+class FormAndShow
 {
     public function __construct(
         private readonly EtatManager            $etatService,
@@ -150,5 +148,13 @@ class FormSubmission
         $this->etatService->settingEtat($sortie);
         $this->em->persist($sortie);
         $this->em->flush();
+    }
+
+    public function exceptionIfCannotRead(Sortie $sortie): void {
+        if ($sortie->getEtat() === $this->etatRepo->find(7)) {
+            throw new SortieIllegalDisplay(
+                'Le sortie est archivée, il n\'est plus possible de la consulter'
+            );
+        }
     }
 }

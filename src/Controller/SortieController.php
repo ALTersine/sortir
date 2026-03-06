@@ -9,6 +9,7 @@ use App\Exception\EtatError;
 use App\Exception\LieuNotFound;
 use App\Exception\ParticipantNotFound;
 use App\Exception\SortieAlreadyClosed;
+use App\Exception\SortieIllegalDisplay;
 use App\Exception\SortieIllegalUpdate;
 use App\Exception\SortieNotFound;
 use App\Form\CancelSortieType;
@@ -17,7 +18,7 @@ use App\Repository\CampusRepository;
 use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
 use App\SortieService\EtatManager;
-use App\SortieService\FormSubmission;
+use App\SortieService\FormAndShow;
 use App\SortieService\LieuManager;
 use App\Util\FromUserToParticipant;
 use Doctrine\ORM\EntityManagerInterface;
@@ -54,10 +55,17 @@ final class SortieController extends AbstractController
     }
 
     #[Route('/{id}', name: 'sortie_show', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function show($id, SortieRepository $sortieRepository, EtatManager $etatService): Response
+    public function show($id, SortieRepository $sortieRepository, EtatManager $etatService, FormAndShow $sortieService): Response
     {
         //va chercher la sotie dans la bdd en fonction de l'id
         $sortie = $sortieRepository->find($id);
+
+        try{
+            $sortieService->exceptionIfCannotRead($sortie);
+        } catch (SortieIllegalDisplay $e) {
+            $this->addFlash('danger', $e->getMessage());
+            return $this->redirectToRoute('sortie_liste');
+        }
 
         return $this->render('sortie/show.html.twig', [
             'sortie' => $sortie,
@@ -67,8 +75,8 @@ final class SortieController extends AbstractController
 
     #[Route('/creer', name: 'sortie_create', methods: ['GET', 'POST'])]
     public function create(
-        Request        $request,
-        FormSubmission $sortieService,
+        Request     $request,
+        FormAndShow $sortieService,
     ): Response
     {
         try {
@@ -104,10 +112,10 @@ final class SortieController extends AbstractController
 
     #[Route('/{id}/modifier', name: 'sortie_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function edit(
-        int            $id,
-        Request        $request,
-        FormSubmission $formSubmission,
-        LieuManager    $lieuManager,
+        int         $id,
+        Request     $request,
+        FormAndShow $formSubmission,
+        LieuManager $lieuManager,
     ): Response
     {
         try {
@@ -156,7 +164,7 @@ final class SortieController extends AbstractController
     }
 
     #[Route("/{id}/publish",name: 'sortie_publish', requirements: ['id' => '\d+'], methods: ['POST'])]
-    public function publishSortie(int $id, FormSubmission $sortieService, SortieRepository $sortieRepository): Response
+    public function publishSortie(int $id, FormAndShow $sortieService, SortieRepository $sortieRepository): Response
     {
         $sortie = $sortieRepository->find($id);
         $sortieService->publishSortie($sortie);
@@ -166,7 +174,7 @@ final class SortieController extends AbstractController
     }
 
     #[Route("/{id}/register",name: 'sortie_register', requirements: ['id' => '\d+'], methods: ['POST'])]
-    public function registerSortie(int $id, FormSubmission $sortieService, SortieRepository $sortieRepository): Response
+    public function registerSortie(int $id, FormAndShow $sortieService, SortieRepository $sortieRepository): Response
     {
         $sortie = $sortieRepository->find($id);
         $sortieService->registerSortie($sortie);
@@ -176,7 +184,7 @@ final class SortieController extends AbstractController
     }
 
     #[Route("/{id}/unregister",name: 'sortie_unregister', requirements: ['id' => '\d+'], methods: ['POST'])]
-    public function unRegisterSortie(int $id, FormSubmission $sortieService, SortieRepository $sortieRepository): Response
+    public function unRegisterSortie(int $id, FormAndShow $sortieService, SortieRepository $sortieRepository): Response
     {
         $sortie = $sortieRepository->find($id);
         $sortieService->unRegisterSortie($sortie);
@@ -187,11 +195,11 @@ final class SortieController extends AbstractController
 
     #[Route('/{id}/cancel', name: 'sortie_cancel', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function cancelSortie(
-        int $id,
-        Request $request,
-        FormSubmission $sortieService,
+        int              $id,
+        Request          $request,
+        FormAndShow      $sortieService,
         SortieRepository $sortieRepository,
-        EtatManager $etatService
+        EtatManager      $etatService
     ): Response {
         $sortie = $sortieRepository->find($id);
 
