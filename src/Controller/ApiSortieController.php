@@ -8,10 +8,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 #[Route('/api')]
 final class ApiSortieController extends AbstractController
 {
+    public function __construct(private CsrfTokenManagerInterface $csrf) {}
+
     #[Route('/sorties', name: 'api_sorties', methods: ['GET'])]
     public function list(Request $request, SortieSearchService $searchService): JsonResponse
     {
@@ -127,27 +130,29 @@ final class ApiSortieController extends AbstractController
                         'title' => 'Publier la sortie',
                         'href' => $publishUrl,
                         'method' => 'POST',
-                        'csrf' => $this->container->get('security.csrf.token_manager')->getToken('publish'.$s->getId())->getValue(),
+                        'csrf' => $this->csrf->getToken('sortie_publish'.$s->getId())->getValue(),
                     ];
                 }
 
                 if ($user && $isOuverte && !$deadlinePassed && !$hasStarted && !$isFull && !$isUserInscrit) {
                     $actions[] = [
-                        'key' => 'subscribe',
+                        'key' => 'register',
                         'label' => "S'inscrire",
                         'class' => 'btn btn-group-sm btn-primary',
                         'href' => $registerUrl,
-                        'method' => 'POST'  //attention post
+                        'method' => 'POST',  //attention post
+                        'csrf' => $this->csrf->getToken('sortie_register'.$s->getId())->getValue(),
                     ];
                 }
 
                 if ($user && $isUserInscrit && !$hasStarted) {
                     $actions[] = [
-                        'key' => 'unsubscribe',
+                        'key' => 'unregister',
                         'label' => 'Se désister',
                         'class' => 'btn btn-group-sm btn-primary',
                         'href' => $unRegisterUrl,
-                        'method' => 'POST' //attention post
+                        'method' => 'POST',  //attention post
+                        'csrf' => $this->csrf->getToken('sortie_unregister'.$s->getId())->getValue(),
                     ];
                 }
 
@@ -157,7 +162,8 @@ final class ApiSortieController extends AbstractController
                         'label' => 'Annuler',
                         'class' => 'btn btn-group-sm btn-danger',
                         'href' => $cancelUrl,
-                        'method' => 'POST'
+                        'method' => 'POST',  //attention post
+                        'csrf' => $this->csrf->getToken('sortie_cancel'.$s->getId())->getValue(),
                     ];
                 }
             }
