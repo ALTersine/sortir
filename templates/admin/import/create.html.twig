@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ parent() }}Lancer un import d'utilisateurs
+{% endblock %}
+
+{% block section %}
+    <h1>Bienvenue dans la page de gestion d'import en masse</h1>
+    <p><strong>Règles d'import : </strong></p>
+    <ul>
+        <li>
+            Le fichier doit être au format .CSV encodage UTF-8.
+        </li>
+        <li>
+            Renseignez toutes les colonnes comme suit :
+            <dl>
+                <dt>Pseudo</dt>
+                <dd>Un pseudo au choix entre 2 et 180 caractères</dd>
+                <dd>Il doit être unique</dd>
+
+                <dt>Mot de passe</dt>
+                <dd>Minimum 8 caractères dont un spécial, une majuscule, une minscule et un chiffre</dd>
+
+                <dt>Nom</dt>
+                <dd>Doit contenir entre 2 et 255 caractères</dd>
+
+                <dt>Prénom</dt>
+                <dd>Doit contenir entre 2 et 255 caractères</dd>
+
+                <dt>Téléphone</dt>
+                <dd>Doit contenir entre 9 et 255 caractères</dd>
+
+                <dt>Mail</dt>
+                <dd>Un mail valide comme : exemple@mail.com</dd>
+                <dd>Il doit être unique</dd>
+
+                <dt>Campus</dt>
+                <dd>Saisissez précisement le nom d'un des campus renseignés dans le logiciel :</dd>
+                <ul>
+                {% for campus in campusAvailable %}
+                    <li>{{ campus.name }}</li>
+                {% endfor %}
+                </ul>
+
+                <dt>Role</dt>
+                <dd>Si l'utilisateur a un rôle spécifique tel que inactif ou administrateur, saisissez l'inforamtion ici</dd>
+                <dd>Sinon, laissez cette colonne vide.</dd>
+            </dl>
+        </li>
+    </ul>
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+{% endblock %}
+

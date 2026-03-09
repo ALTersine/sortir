@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ parent() }}Valider l'import d'utilisateurs
+{% endblock %}
+
+{% block section %}
+    <h1>Validez vos utilisateurs avant l'enregistrement en base de données</h1>
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+        <tr>
+            <th class="table-active">N° ligne</th>
+            <th>Pseudo</th>
+            <th>Mot de passe</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Téléphone</th>
+            <th>Mail</th>
+            <th>Campus</th>
+            <th>Particluarité</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in rows %}
+            {% set user = row.userData %}
+            <tr>
+                <td class="table-active">{{ row.numLigne }}</td>
+                <td>{{ user.pseudo }}</td>
+                <td>{{ user.password ? 'renseigné' : 'absent' }}</td>
+                <td>{{ user.nom }}</td>
+                <td>{{ user.prenom }}</td>
+                <td>{{ user.telephone }}</td>
+                <td>{{ user.mail }}</td>
+                <td>{{ user.campus.name }}</td>
+
+                {% if 'ROLE_ADMIN' in user.roles %}
+                    <td>Adminitrateur</td>
+                {% elseif 'ROLE_USER' in user.roles %}
+                    <td>Inactif</td>
+                {% else %}
+                    <td>Aucune particularité</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <form method="POST">
+        <button type="submit" name="confirm" class="btn btn-success">Valider l'import</button>
+        <button type="submit" name="cancel" class="btn btn-danger">Annuler</button>
+    </form>
+{% endblock %}
+

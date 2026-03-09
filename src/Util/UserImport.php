@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserImport
 {
-    private const ALL_COLUMNS = [
+    private const array ALL_COLUMNS = [
         'pseudo',
         'mot de passe',
         'nom',
@@ -37,7 +37,7 @@ class UserImport
         try {
             $data = fopen($this->fileDirectory(), 'r');
             try {
-                $this->validateHeader(fgetcsv($data));
+               // $this->validateHeader(fgetcsv($data));
 
                 $ligneConcerned = 1;
 
@@ -52,13 +52,13 @@ class UserImport
                 while (($row = fgetcsv($data)) !== false) {
                     $ligneConcerned++;
                     try {
-                        $this->validationUnmissingColumns($row, $ligneConcerned);
+                        //$this->validationUnmissingColumns($row, $ligneConcerned);
 
                         //mapper les donner colonne, ligne + prendre en compte le role qui peut être null
                         $row = array_pad($row, count(self::ALL_COLUMNS), null);
-                        $data = array_combine(self::ALL_COLUMNS, $row);
+                        $mappedData = array_combine(self::ALL_COLUMNS, $row);
                         try {
-                            $user = $this->service->settingUser($data, $pseudoImport, $emailImport);
+                            $user = $this->service->settingUser($mappedData, $pseudoImport, $emailImport);
                             $errors = $this->validator->validate($user);
 
                             if (count($errors) > 0) {
@@ -68,7 +68,10 @@ class UserImport
                                 }
                                 continue;
                             }
-                            $resultat['users'][] = $user;
+                            $resultat['users'][] = [
+                                'numLigne' => $ligneConcerned,
+                                'userData' => $user
+                            ];
                         } catch (\Exception $e) {
                             //Erreur issue du service RegleImport
                             $resultat['errors'][] = 'Erreur sur la ligne ' . $ligneConcerned . ' : ' . $e->getMessage();
@@ -89,7 +92,6 @@ class UserImport
                     ' Import annulé.'
                 );
             } finally {
-                fclose($data);
                 $this->endImportProcess();
             }
         } catch (\Exception $e) {
@@ -107,7 +109,7 @@ class UserImport
         try {
             return $this->container->get('app.project_user_update_directory') .
                 '/' .
-                $this->container->get('app.util.uploader');
+                $this->container->get('app.name_user_update_file');
         } catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
             throw new \Exception($e->getMessage());
         }
@@ -119,10 +121,10 @@ class UserImport
         try {
             $file->move(
                 $this->container->get('app.project_user_update_directory'),
-                $this->container->get('app.util.uploader')
+                $this->container->get('app.name_user_update_file')
             );
         } catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
-            throw new RuntimeException('Erreur à l\'enregistrement du fichier', $e->getMessage());
+            throw new RuntimeException('Erreur à l\'enregistrement du fichier : '. $e->getMessage());
         }
     }
 
