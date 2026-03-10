@@ -11,35 +11,24 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class VilleType extends AbstractType
+class VilleFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('campus', EntityType::class, [
-                'label_attr' => [
-                    'hidden' => true,
-                ],
-                'attr' => [
-                    'class' => 'mt-5',
-                ],
+                'label' => 'Campus :',
                 'class' => Campus::class,
                 'choice_label' => 'name',
-                'help' => '/!\ le choix du lieu d\'une sortie est filtré sur le campus.
-                Créez une ville qui fasse partie de la même zone géographique que ce choix.',
             ])
             ->add('name', TextType::class, [
-                'label_attr' => [
-                    'hidden' => true,
-                ],
+                'label' => 'Le nom contient :'
             ])
             ->add('codePostal', TextType::class, [
-                'label_attr' => [
-                    'hidden' => true,
-                ],
+                'label' => 'Le code postal contient :'
             ])
             ->add('save', SubmitType::class, [
-                'label' => 'Enregistrer',
+                'label' => 'Rechercher',
                 'attr' => [
                     'class' => 'btn btn-success',
                 ]
@@ -50,7 +39,7 @@ class VilleType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Ville::class,
+            'mapped' => false,
         ]);
     }
 }

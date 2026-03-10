@@ -16,6 +16,15 @@ class VilleRepository extends ServiceEntityRepository
         parent::__construct($registry, Ville::class);
     }
 
+    public function findAllVillesDesc(){
+        return $this->createQueryBuilder('v')
+            ->addSelect('c')
+            ->leftJoin('v.campus', 'c')
+            ->orderBy('v.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Ville[] Returns an array of Ville objects
     //     */

@@ -26,6 +26,15 @@ class LieuRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    public function canVilleBeDeleted(int $id) : bool{
+        $queryBuilder = $this->createQueryBuilder('l')
+            ->select('COUNT(s.id)')
+            ->innerJoin('l.sorties', 's')
+            ->where('l.ville = :ville')
+            ->setParameter('ville', $id);
+        return $queryBuilder->getQuery()->getSingleScalarResult() === 0;
+    }
+
     //    /**
     //     * @return Lieu[] Returns an array of Lieu objects
     //     */

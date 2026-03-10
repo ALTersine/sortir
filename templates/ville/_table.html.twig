@@ -1,0 +1,33 @@
+<table class="table table-bordered w-100">
+    <thead>
+    <tr>
+        <th>Campus de référence</th>
+        <th scope="col">Ville</th>
+        <th scope="col">Code Postal</th>
+        <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <turbo-frame id="villes_create">
+        {% include 'ville/_create.html.twig' %}
+    </turbo-frame>
+    {% if (villes|length) >0 %}
+        {% for ville in villes %}
+            <tr>
+                <td>{{ ville.campus.name }}</td>
+                <td>{{ ville.name }}</td>
+                <td>{{ ville.codePostal }}</td>
+                <td>
+                    <a href="{{ path('app_ville_update',{id:ville.id}) }}">Modifier</a>
+                    <a href="{{ path('app_ville_delete',{id:ville.id}) }}">Supprimer</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">Aucune ville trouvée</td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+    </tbody>
+</table>
+
