@@ -54,6 +54,7 @@ security:
         - { path: ^/api-plateform,       roles: IS_AUTHENTICATED_FULLY }
 
         - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/reset-password, roles: PUBLIC_ACCESS }
         - { path: ^/logout, roles: PUBLIC_ACCESS }
 
         - { path: ^/, roles: ROLE_PARTICIPANT }
