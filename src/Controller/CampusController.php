@@ -8,6 +8,7 @@ use App\Repository\CampusRepository;
 use App\Util\AdminPage\Factory;
 use App\Util\AdminPage\Filters;
 use App\Util\AdminPage\MadeForCampus;
+use App\Util\AdminPage\MadeForVille;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,6 +25,7 @@ final class CampusController extends AbstractController
         Request $request,
         Factory $service,
         MadeForCampus $filters,
+        MadeForVille $filtreVille,
         CampusRepository $repo,
     ): Response
     {
@@ -70,7 +72,14 @@ final class CampusController extends AbstractController
             try {
                 $campus = $service->foundEntity('campus_delete_id', $repo, $request);
                 try {
-                    //todo : gestion du delete pour le campus
+                    $service->deletingCampus(
+                        $request,
+                        $campus,
+                        $lstCampus,
+                        $filters,
+                        $request->request->get($filtreVille->getNomListSession()),
+                        $filtreVille
+                    );
                     $this->addFlash('warning', 'Le campus a été supprimé');
                     return $this->redirectToRoute('app_campus_admin');
                 } catch (\Exception $e) {

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Lieu;
+use App\Entity\Ville;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -26,12 +27,12 @@ class LieuRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function canVilleBeDeleted(int $id) : bool{
+    public function canVilleBeDeleted(Ville $ville) : bool{
         $queryBuilder = $this->createQueryBuilder('l')
             ->select('COUNT(s.id)')
             ->innerJoin('l.sorties', 's')
             ->where('l.ville = :ville')
-            ->setParameter('ville', $id);
+            ->setParameter('ville', $ville);
         return $queryBuilder->getQuery()->getSingleScalarResult() === 0;
     }
 
