@@ -58,7 +58,7 @@ class VilleRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('v')
             ->addSelect('c')
             ->leftJoin('v.campus', 'c')
-            ->Where('v.id = :campus')
+            ->Where('v.campus = :campus')
             ->setParameter('campus', $campus)
             ->getQuery()
             ->getResult();

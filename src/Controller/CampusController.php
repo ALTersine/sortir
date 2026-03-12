@@ -53,7 +53,7 @@ final class CampusController extends AbstractController
             try {
                 $campus = $service->foundEntity('campus_edit_id', $repo, $request);
             } catch (\Exception $e) {
-                $this->addFlash('error', $e->getMessage() . ' Le campus n\'existe pas.');
+                $this->addFlash('danger', $e->getMessage() . ' Le campus n\'existe pas.');
                 return $this->redirectToRoute('app_campus_admin');
             }
 
@@ -81,12 +81,12 @@ final class CampusController extends AbstractController
                         $filtreVille
                     );
                     $this->addFlash('warning', 'Le campus a été supprimé');
-                    return $this->redirectToRoute('app_campus_admin');
                 } catch (\Exception $e) {
-                    $this->addFlash('error', $e->getMessage() . ' La suppression campus a été annulé.');
+                    $this->addFlash('danger', $e->getMessage() . ' La suppression du campus a été annulé.');
                 }
             } catch (\Exception $e) {
-                $this->addFlash('error', $e->getMessage() . ' Le campus n\'existe pas.');
+                $this->addFlash('danger', $e->getMessage() . ' Le campus n\'existe pas.');
+            } finally {
                 return $this->redirectToRoute('app_campus_admin');
             }
         }

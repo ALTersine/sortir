@@ -72,7 +72,7 @@ final class VilleController extends AbstractController
             try {
                 $ville = $service->foundEntity('ville_edit_id', $villeRepo, $request);
             } catch (\Exception $e) {
-                $this->addFlash('error', $e->getMessage() . ' La ville n\'existe pas.');
+                $this->addFlash('danger', $e->getMessage() . ' La ville n\'existe pas.');
                 return $this->redirectToRoute('app_ville_admin');
             }
 
@@ -95,12 +95,12 @@ final class VilleController extends AbstractController
                 try {
                     $service->deletingVille($ville, $villes, $request, $filters);
                     $this->addFlash('warning', 'La ville a été supprimée');
-                    return $this->redirectToRoute('app_ville_admin');
                 } catch (\Exception $e) {
-                    $this->addFlash('error', $e->getMessage() . ' La suppression de la ville a été annulée.');
+                    $this->addFlash('danger', $e->getMessage() . ' La suppression de la ville a été annulée.');
                 }
             } catch (\Exception $e) {
-                $this->addFlash('error', $e->getMessage() . ' La ville n\'existe pas.');
+                $this->addFlash('danger', $e->getMessage() . ' La ville n\'existe pas.');
+            } finally {
                 return $this->redirectToRoute('app_ville_admin');
             }
         }
