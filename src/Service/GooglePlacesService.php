@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Ville;
+use App\Mapper\PlaceGoogleMapper;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class GooglePlacesService
@@ -12,6 +13,7 @@ class GooglePlacesService
     public function __construct(
         string                               $googlePlacesApiKey,
         private readonly HttpClientInterface $httpClient,
+        private readonly PlaceGoogleMapper   $mapper
 
     )
     {
@@ -35,6 +37,12 @@ class GooglePlacesService
             ]
         );
         $data = $response->toArray();
-        return $data['places'] ?? [];
+
+        $resultat = [];
+        foreach ($data["places"] as $place) {
+            $resultat[] = $this->mapper->map($place);
+        }
+
+        return $resultat;
     }
 }

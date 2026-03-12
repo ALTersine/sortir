@@ -19,7 +19,7 @@ class PlacesApi extends AbstractController
         VilleRepository $repo
     ): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        $data = $request->toArray();
 
         //todo: remettre bien une fois qu'on passe par l'interface
         /*$recherche = $data["recherche"] ?? null;
