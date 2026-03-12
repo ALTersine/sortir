@@ -67,6 +67,7 @@
                                 <div class="col-6 fw-bold">Ville</div>
                                 <div class="col-6">{{ lieu.ville.name }}</div>
                             </div>
+                            <hr>
 
                             <div class="row mb-2">
                                 <div class="col-6 fw-bold">Lieu</div>
@@ -78,10 +79,10 @@
                                 <div class="col-6">{{ lieu.rue }}</div>
                             </div>
 
-                            <div class="row mb-2">
+                            {#<div class="row mb-2">
                                 <div class="col-6 fw-bold">Code postal</div>
                                 <div class="col-6">{{ lieu.ville.codePostal }}</div>
-                            </div>
+                            </div>#}
 
                             {% if lieu.coordonneesGps %}
                                 <div class="row mb-2">
