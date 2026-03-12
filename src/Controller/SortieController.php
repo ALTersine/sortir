@@ -20,7 +20,7 @@ use App\Repository\SortieRepository;
 use App\SortieService\EtatManager;
 use App\SortieService\FormAndShow;
 use App\SortieService\LieuManager;
-use App\Util\FromUserToParticipant;
+use App\Service\FromUserToParticipant;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 use PHPUnit\Framework\Exception;

@@ -51,6 +51,8 @@ security:
     # Note: Only the *first* matching rule is applied
     access_control:
         - { path: ^/api-plateform/login, roles: PUBLIC_ACCESS }
+        #todo : Tout remettre bien une fois l'api Google validé
+        - {path: ^/api/places, roles: PUBLIC_ACCESS}
         - { path: ^/api-plateform,       roles: IS_AUTHENTICATED_FULLY }
 
         - { path: ^/login, roles: PUBLIC_ACCESS }

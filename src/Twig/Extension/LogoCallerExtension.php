@@ -2,7 +2,7 @@
 
 namespace App\Twig\Extension;
 
-use App\Util\LogoGenerator;
+use App\Service\LogoGenerator;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 

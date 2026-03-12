@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Util\AdminPage;
+namespace App\Service\AdminPage;
 
 use App\Entity\Administrable;
 use App\Entity\Campus;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Util\AdminPage;
+namespace App\Service\AdminPage;
 
 use App\Repository\CampusRepository;
 use Symfony\Component\HttpFoundation\Request;

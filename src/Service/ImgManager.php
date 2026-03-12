@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Util;
+namespace App\Service;
 
 use App\Entity\Participant;
 use App\Exception\ParticipantNotFound;

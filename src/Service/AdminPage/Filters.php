@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Util\AdminPage;
+namespace App\Service\AdminPage;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;

@@ -6,7 +6,7 @@ namespace App\ParticipantService;
 
 use App\Entity\Campus;
 use App\Entity\Participant;
-use App\Util\ImgManager;
+use App\Service\ImgManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;

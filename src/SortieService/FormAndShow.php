@@ -11,7 +11,7 @@ use App\Exception\SortieIllegalUpdate;
 use App\Exception\SortieNotFound;
 use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
-use App\Util\FromUserToParticipant;
+use App\Service\FromUserToParticipant;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 

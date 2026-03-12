@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Util;
+namespace App\Service;
 
 use App\ParticipantService\ParticipantImportFactory;
 use \RuntimeException;
