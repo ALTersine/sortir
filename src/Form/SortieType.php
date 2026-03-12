@@ -28,6 +28,7 @@ class SortieType extends AbstractType
         $campus = $options['CampusToUseAsFilter'];
         $update = $options['update'];
         $infoVille = $options['dataUrlVille'];
+        $ville = $options['villeOrigine'];
         $cpVille  = $options['cpVilleOrigine'];
 
         /**
@@ -90,14 +91,15 @@ class SortieType extends AbstractType
                 'choice_label' => 'name',
                 'multiple' => false,
                 'mapped' => false,
+                'data' => $ville,
                 'query_builder' => function (VilleRepository $repo) use ($campus) {
                     return $repo->createQueryBuilder('v')
                         ->where('v.campus = :campus')
                         ->setParameter('campus', $campus);
                 },
                 'attr'=>[
-                    'data-url' => $infoVille
-                ]
+                    'data-url' => $infoVille,
+                ],
             ])
             ->add('lieuNom', TextType::class, [
                 'label' => 'Lieu(x)',
@@ -105,6 +107,7 @@ class SortieType extends AbstractType
                     'placeholder' => 'Indiquez où vous souhaitez organiser cette sortie',
                 ],
                 'mapped' => false,
+                'required' => false,
             ])
             ->add('lieuCP', TextType::class, [
                 'label' => 'Code postal',
@@ -146,6 +149,7 @@ class SortieType extends AbstractType
             'CampusToUseAsFilter' => null,
             'update' => false,
             'dataUrlVille' => null,
+            'villeOrigine' => null,
             'cpVilleOrigine' => null
         ]);
     }

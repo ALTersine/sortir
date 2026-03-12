@@ -13,6 +13,7 @@ use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
 use App\Service\FromUserToParticipant;
 use Doctrine\ORM\EntityManagerInterface;
+use phpDocumentor\Reflection\Exception\CannotCreateTag;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -53,7 +54,11 @@ class FormAndShow
     {
         try {
             //Nouvelle gestion du lieu en JSON traité dans son service
-            $this->lieuService->createLieuFromJSON($request, $sortie, $form, $this->em);
+            try {
+                $this->lieuService->createLieuFromJSON(true, $request, $sortie, $form, $this->em);
+            } catch (CannotCreateTag $e) {
+                throw new \Exception(' Impossible de créer la sortie : ' . $e->getMessage());
+            }
 
             /*//Gestion du lieu affilié à la sortie
             $lieu = $this->lieuService->createLieuFromSortie($form);
@@ -107,19 +112,21 @@ class FormAndShow
         $this->em->flush();
     }
 
-    public function updateSortie(Campus $campus, Sortie $sortie, FormInterface $form): void
+    public function updateSortie(Campus $campus, Sortie $sortie, FormInterface $form, Request $request): void
     {
         $sortie->setCampus($campus);
 
-        foreach ($sortie->getLieux() as $lieu) {
-            $this->lieuService->ctrlAndReplaceLieuData($lieu, $form);
-            $this->em->persist($lieu);
+        try {
+            $this->lieuService->createLieuFromJSON(false, $request, $sortie, $form, $this->em);
+            $this->etatService->setSortieEtatFromForm($sortie, $form);
+            $this->em->persist($sortie);
+
+            $this->em->flush();
+        } catch (EtatError $e) {
+            throw new EtatError($e->getMessage(), $e->getCode());
         }
 
-        $this->etatService->setSortieEtatFromForm($sortie, $form);
-        $this->em->persist($sortie);
 
-        $this->em->flush();
     }
 
     public function publishSortie(Sortie $sortie): void

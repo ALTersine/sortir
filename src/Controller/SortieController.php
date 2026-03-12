@@ -60,7 +60,7 @@ final class SortieController extends AbstractController
         //va chercher la sotie dans la bdd en fonction de l'id
         $sortie = $sortieRepository->find($id);
 
-        try{
+        try {
             $sortieService->exceptionIfCannotRead($sortie);
         } catch (SortieIllegalDisplay $e) {
             $this->addFlash('danger', $e->getMessage());
@@ -93,12 +93,17 @@ final class SortieController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $sortieService->createSortie($infoCampus, $form, $newSortie, $request);
+                try {
+                    $sortieService->createSortie($infoCampus, $form, $newSortie, $request);
 
-                $this->addFlash('success', 'La sortie est prête ! Découvrez en tous les détails ici');
-                return $this->redirectToRoute('sortie_show', ['id' => $newSortie->getId()]);
+                    $this->addFlash('success', 'La sortie est prête ! Découvrez en tous les détails ici');
+                    return $this->redirectToRoute('sortie_show', ['id' => $newSortie->getId()]);
+                } catch (EtatError|\Exception $e) {
+                    $this->addFlash('danger', $e->getMessage());
+                    return $this->redirectToRoute('sortie_create');
+                }
             }
-        } catch (ParticipantNotFound|EtatError $e) {
+        } catch (ParticipantNotFound $e) {
             $this->addFlash('danger', $e->getMessage());
             return $this->redirectToRoute('sortie_liste');
         }
@@ -116,7 +121,6 @@ final class SortieController extends AbstractController
         int         $id,
         Request     $request,
         FormAndShow $formSubmission,
-        LieuManager $lieuManager,
     ): Response
     {
         try {
@@ -127,19 +131,18 @@ final class SortieController extends AbstractController
 
             $infoCampus = $sortie->getCampus();
 
-            $cpVille = [];
-            foreach ($sortie->getLieux() as $lieu) {
-                $cpVille[] = $lieu->getVille()->getCodePostal();
-            }
+            $defaultLieu = $sortie->getLieux()->get(0);
 
             $form = $this->createForm(SortieType::class, $sortie, [
                 'CampusToUseAsFilter' => $infoCampus,
                 'update' => $update,
                 'dataUrlVille' => $this->generateUrl('app_ville_cp'),
-                'cpVilleOrigine' => $cpVille[0],
+                'villeOrigine' => $defaultLieu->getVille(),
+                'cpVilleOrigine' => $defaultLieu->getVille()->getCodePostal(),
             ]);
 
-            $lieuManager->setLieuInput($form, $sortie);
+            /* N'existe plus suite au passage par api
+             * $lieuManager->setLieuInput($form, $sortie);*/
 
             $form->handleRequest($request);
 
@@ -152,10 +155,14 @@ final class SortieController extends AbstractController
                     return $this->redirectToRoute('sortie_liste');
                 }
 
-                $formSubmission->updateSortie($infoCampus, $sortie, $form);
-
-                $this->addFlash('success', 'La sortie a bien été mise à jour !');
-                return $this->redirectToRoute('sortie_show', ['id' => $id]);
+                try {
+                    $formSubmission->updateSortie($infoCampus, $sortie, $form, $request);
+                    $this->addFlash('success', 'La sortie a bien été mise à jour !');
+                } catch (EtatError $e) {
+                    $this->addFlash('danger', $e->getMessage());
+                } finally {
+                    return $this->redirectToRoute('sortie_show', ['id' => $id]);
+                }
 
             }
 
@@ -168,36 +175,54 @@ final class SortieController extends AbstractController
             'form' => $form,
             'titleAndH1' => 'Mise à jour d\'une sortie',
             'allowRemove' => $update,
+            'lieux' => $sortie->getLieux(),
+            'sortie' => $sortie,
         ]);
     }
 
-    #[Route("/{id}/publish",name: 'sortie_publish', requirements: ['id' => '\d+'], methods: ['POST'])]
+    #[Route('/{id}/modifier/deleteLieu', name: 'sortie_lieu_delete', requirements: ['id' => '\d+'],methods: ['POST'])]
+    public function deleteLieu(
+        Request $request,
+        LieuManager $lieuManager,
+        int $id
+    ):Response{
+        try {
+            $lieuManager->deleteLieu($request->request->get('lieu_delete'));
+        } catch (LieuNotFound $e) {
+            $this->addFlash('danger', $e->getMessage() . ' Suppression annulée');
+        } finally {
+            //todo: boucler sur la même route fait péter le JS, à corriger.
+            return $this->redirectToRoute('sortie_edit', ['id' => $id]);
+        }
+    }
+
+    #[Route("/{id}/publish", name: 'sortie_publish', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function publishSortie(int $id, FormAndShow $sortieService, SortieRepository $sortieRepository): Response
     {
         $sortie = $sortieRepository->find($id);
         $sortieService->publishSortie($sortie);
 
-        $this->addFlash('success','La sortie à été publié');
+        $this->addFlash('success', 'La sortie à été publié');
         return $this->redirectToRoute('sortie_liste');
     }
 
-    #[Route("/{id}/register",name: 'sortie_register', requirements: ['id' => '\d+'], methods: ['POST'])]
+    #[Route("/{id}/register", name: 'sortie_register', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function registerSortie(int $id, FormAndShow $sortieService, SortieRepository $sortieRepository): Response
     {
         $sortie = $sortieRepository->find($id);
         $sortieService->registerSortie($sortie);
 
-        $this->addFlash('success','Vous êtes inscrit à la sortie');
+        $this->addFlash('success', 'Vous êtes inscrit à la sortie');
         return $this->redirectToRoute('sortie_liste');
     }
 
-    #[Route("/{id}/unregister",name: 'sortie_unregister', requirements: ['id' => '\d+'], methods: ['POST'])]
+    #[Route("/{id}/unregister", name: 'sortie_unregister', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function unRegisterSortie(int $id, FormAndShow $sortieService, SortieRepository $sortieRepository): Response
     {
         $sortie = $sortieRepository->find($id);
         $sortieService->unRegisterSortie($sortie);
 
-        $this->addFlash('success','Vous êtes retiré de la sortie');
+        $this->addFlash('success', 'Vous êtes retiré de la sortie');
         return $this->redirectToRoute('sortie_liste');
     }
 
@@ -208,7 +233,8 @@ final class SortieController extends AbstractController
         FormAndShow      $sortieService,
         SortieRepository $sortieRepository,
         EtatManager      $etatService
-    ): Response {
+    ): Response
+    {
         $sortie = $sortieRepository->find($id);
 
         try {

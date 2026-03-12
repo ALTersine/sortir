@@ -17,7 +17,25 @@
             {{ form_row(form.dateLimiteInscription) }}
             {{ form_row(form.nbInscriptionMax) }}
             {{ form_row(form.duree) }}
-
+            {% if allowRemove %}
+                <hr>
+                <h6>Lieu(x) déjà prévu(s) pour la sortie</h6>
+                <ul>
+                    {% for lieu in lieux %}
+                        <li>{{ lieu.name }} ({{ lieu.rue }})</li>
+                        <button
+                            type="submit"
+                            name="lieu_delete"
+                            value="{{ lieu.id }}"
+                            formaction="{{ path('sortie_lieu_delete', {id:sortie.id}) }}"
+                            formmethod="POST"
+                            class="btn btn-outline-danger btn-sm"
+                            onclick="return confirm('La suppression sera définitive et irréversible, souhaitez-vous continuer?')"
+                        >Supprimer
+                        </button>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         </div>
         <div class="col-sm-12 col-md-6 justify-content-center">
             {{ form_row(form.campus) }}
@@ -26,11 +44,16 @@
             {{ form_row(form.lieuNom) }}
             <button type="button" id="search-place-btn" class="btn btn-sm btn-outline-primary mb-1">Rerchercher</button>
             <div id="places_research_container">
-                <p class="text-secondary">Lancer une recherche sur le ou les lieux de votre sortie en indiquant la ville et un critère ci-dessus.</p>
+                <p class="text-secondary">Lancer une recherche sur le ou les lieux de votre sortie en indiquant la ville
+                    et un critère ci-dessus.</p>
             </div>
             <hr>
             <div id="places_selected_container">
-                <h6>Lieu(x) sélectionné(s) pour la sortie :</h6>
+                {% if allowRemove %}
+                    <h6>Lieu(x) complémentaire(s) pour la sortie :</h6>
+                {% else %}
+                    <h6>Lieu(x) sélectionné(s) pour la sortie :</h6>
+                {% endif %}
             </div>
         </div>
         <div class="col-12 ustify-content-center align-content-around">
