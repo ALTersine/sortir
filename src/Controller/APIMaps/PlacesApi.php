@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class PlacesApi extends AbstractController
 {
     #[Route('sortie/api/places', methods: ['POST'])]
-    public function search(
+    public function searchCreate(
         Request             $request,
         GooglePlacesService $api,
     ): JsonResponse

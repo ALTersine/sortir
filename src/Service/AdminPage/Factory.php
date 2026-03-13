@@ -61,8 +61,6 @@ class Factory
 
     public function deletingCampus(Request $request, Campus $campus, array $lstSessionCampus, Filters $filterServiceCampus, ?array $lstSessionVille, Filters $filterServiceVille): void
     {
-        //ToDo : la sécurité ne marche pas à creuser
-
         $listeVilleATester = $this->villeRepo->villeLinkedToOneCampus($campus);
         //Vérification que l'on puisse bien aller sur jusqu'au bout avant de lancer la suppresionn ville puis campus.
         foreach ($listeVilleATester as $ville) {
