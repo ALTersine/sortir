@@ -164,13 +164,13 @@
                     </div>
                 </div>
             </div>
-                <button type="button" id="search-place-btn" class="btn btn-sm btn-outline-primary mb-1">Rerchercher
-                </button>
-                <div id="places_research_container">
-                    <p class="text-secondary">Lancer une recherche sur le ou les lieux de votre sortie en indiquant la
-                        ville
-                        et un critère ci-dessus.</p>
-                </div>
+            <button type="button" id="search-place-btn" class="btn btn-sm btn-outline-primary mb-1">Rerchercher
+            </button>
+            <div id="places_research_container">
+                <p class="text-secondary">Lancer une recherche sur le ou les lieux de votre sortie en indiquant la
+                    ville
+                    et un critère ci-dessus.</p>
+            </div>
             <hr>
             <div id="places_selected_container">
                 {% if allowRemove %}
@@ -180,25 +180,23 @@
                 {% endif %}
             </div>
         </div>
-        <div class="col-12 ustify-content-center align-content-around">
-            <div class="col-sm-12 col-md-6 justify-content-center">
-                <div class="mb-3">
-                    <label for="{{ field_id(form.infosSortie) }}" class="form-label required">
-                        <span style="color:red">* </span>{{ field_label(form.infosSortie) }}
-                    </label>
-                    {{ form_widget(form.infosSortie, {
-                        attr: {
-                            form:'sortie',
-                            class:'form-control'
-                        }
-                    }) }}
-                    <div class="information-container errors">
-                        {{ form_errors(form.infosSortie) }}
-                    </div>
+        <div class="col-12 justify-content-center align-content-around">
+            <div class="col-sm-6 col-md-12 justify-content-center">
+                <label for="{{ field_id(form.infosSortie) }}" class="form-label required">
+                    <span style="color:red">* </span>{{ field_label(form.infosSortie) }}
+                </label>
+                {{ form_widget(form.infosSortie, {
+                    attr: {
+                        form:'sortie',
+                        class:'form-control'
+                    }
+                }) }}
+                <div class="information-container errors">
+                    {{ form_errors(form.infosSortie) }}
                 </div>
             </div>
         </div>
-        <div class="row justify-content-center">
+        <div class="row justify-content-center mt-3">
             <form method="POST" id="sortie">
                 {{ form_row(form._token) }}
                 <div class="row justify-content-center gap-2">
