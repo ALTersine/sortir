@@ -1,4 +1,5 @@
-document.querySelector("form").addEventListener("submit", event => {
+const formSortie = document.getElementById("sortie");
+formSortie.addEventListener("submit", event => {
     //IL faut que ce soit dans les sélectionnés
     const selectedDivs = document.querySelectorAll(".place-item[data-selected='true']");
 

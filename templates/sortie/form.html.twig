@@ -87,16 +87,16 @@
                 <ul>
                     {% for lieu in lieux %}
                         <li>{{ lieu.name }} ({{ lieu.rue }})</li>
-                        <button
-                            type="submit"
-                            name="lieu_delete"
-                            value="{{ lieu.id }}"
-                            formaction="{{ path('sortie_lieu_delete', {id:sortie.id}) }}"
-                            formmethod="POST"
-                            class="btn btn-outline-danger btn-sm"
-                            onclick="return confirm('La suppression sera définitive et irréversible, souhaitez-vous continuer?')"
-                        >Supprimer
-                        </button>
+                        <form action="{{ path('sortie_lieu_delete', {id:sortie.id}) }}" method="POST">
+                            <button
+                                type="submit"
+                                name="lieu_delete"
+                                value="{{ lieu.id }}"
+                                class="btn btn-outline-danger btn-sm"
+                                onclick="return confirm('La suppression sera définitive et irréversible, souhaitez-vous continuer?')">
+                                Supprimer
+                            </button>
+                        </form>
                     {% endfor %}
                 </ul>
             {% endif %}
@@ -164,11 +164,13 @@
                     </div>
                 </div>
             </div>
-            <button type="button" id="search-place-btn" class="btn btn-sm btn-outline-primary mb-1">Rerchercher</button>
-            <div id="places_research_container">
-                <p class="text-secondary">Lancer une recherche sur le ou les lieux de votre sortie en indiquant la ville
-                    et un critère ci-dessus.</p>
-            </div>
+                <button type="button" id="search-place-btn" class="btn btn-sm btn-outline-primary mb-1">Rerchercher
+                </button>
+                <div id="places_research_container">
+                    <p class="text-secondary">Lancer une recherche sur le ou les lieux de votre sortie en indiquant la
+                        ville
+                        et un critère ci-dessus.</p>
+                </div>
             <hr>
             <div id="places_selected_container">
                 {% if allowRemove %}
@@ -200,26 +202,26 @@
             <form method="POST" id="sortie">
                 {{ form_row(form._token) }}
                 <div class="row justify-content-center gap-2">
-                <div class="col-auto d-flex justify-content-center">
-                    {{ form_widget(form.enregistrer) }}
-                </div>
-                <div class="col-auto d-flex justify-content-center">
-                    {{ form_widget(form.publier) }}
-                </div>
-
-                {% if allowRemove %}
                     <div class="col-auto d-flex justify-content-center">
-                        {{ form_widget(form.supprimer) }}
+                        {{ form_widget(form.enregistrer) }}
                     </div>
-                {% endif %}
+                    <div class="col-auto d-flex justify-content-center">
+                        {{ form_widget(form.publier) }}
+                    </div>
+
+                    {% if allowRemove %}
+                        <div class="col-auto d-flex justify-content-center">
+                            {{ form_widget(form.supprimer) }}
+                        </div>
+                    {% endif %}
                 </div>
             </form>
             <div class="col-auto d-flex justify-content-center mt-3">
-                    <a href="{{ path('sortie_liste') }}" class="text-decoration-none text-white">
-                        <button type="button" class="btn btn-secondary">
-                            Retour à la liste
-                        </button>
-                    </a>
+                <a href="{{ path('sortie_liste') }}" class="text-decoration-none text-white">
+                    <button type="button" class="btn btn-secondary">
+                        Retour à la liste
+                    </button>
+                </a>
             </div>
         </div>
     </div>

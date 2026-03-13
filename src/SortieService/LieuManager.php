@@ -50,6 +50,7 @@ class LieuManager
             throw new LieuNotFound('Erreur à la récupération du lieu.');
         }
         $this->em->remove($lieu);
+        $this->em->flush();
     }
 
 

@@ -3,7 +3,6 @@ const SEARCH_WHAT = document.getElementById('sortie_lieuNom');
 const SEARCH_WHERE = document.getElementById('sortie_lieuVille');
 const SEARCH_RESULTS = document.getElementById('places_research_container');
 const SELECTION = document.getElementById('places_selected_container');
-
 document.addEventListener('DOMContentLoaded', () => {
     SEARCH_BTN.addEventListener('click', () => {
         const recherche = SEARCH_WHAT.value;
@@ -25,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 function searchPlaces(recherche, ville) {
-    fetch("api/places", {
+    fetch( "/sortie/api/places", {
         method: 'POST',
         headers: {"content-type": "application/json"},
         body: JSON.stringify({

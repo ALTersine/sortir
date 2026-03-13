@@ -187,11 +187,11 @@ final class SortieController extends AbstractController
         int $id
     ):Response{
         try {
-            $lieuManager->deleteLieu($request->request->get('lieu_delete'));
+            $idLieu = $request->request->get('lieu_delete');
+            $lieuManager->deleteLieu($idLieu);
         } catch (LieuNotFound $e) {
             $this->addFlash('danger', $e->getMessage() . ' Suppression annulée');
         } finally {
-            //todo: boucler sur la même route fait péter le JS, à corriger.
             return $this->redirectToRoute('sortie_edit', ['id' => $id]);
         }
     }
