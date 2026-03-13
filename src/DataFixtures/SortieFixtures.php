@@ -62,8 +62,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
 
             for ($j = 1; $j <= $nbInscrits; $j++) {
                 $participant = $this->getReference('participant_' .
-//                    $faker->numberBetween(1, 2)
-                2
+                    $faker->numberBetween(1, 12)
                     , Participant::class);
                 $sortie->addInscrit($participant);
             }
