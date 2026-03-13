@@ -66,22 +66,22 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
 
         $manager->persist($inactif);
 
-//        for ($i = 0; $i < 10; $i++) {
-//            $participant = new Participant();
-//            $participant->setPseudo($faker->userName());
-//            $participant->setPassword(password_hash(($faker->password(8).'@'.rand(0,9)), PASSWORD_DEFAULT));
-//            $participant->setNom($faker->lastName());
-//            $participant->setPrenom($faker->firstName());
-//            $participant->setTelephone($faker->phoneNumber());
-//            $participant->setMail($faker->email());
-//            $participant->setCampus($campusDispo[rand(0, count($campusDispo) - 1)]);
-//
-//            $manager->persist($participant);
-//            $this->addReference('participant_' . $i, $participant);
-//            $this->addReference('organisateur_' . $i, $participant);
-//
-//
-//        }
+        for ($i = 0; $i < 10; $i++) {
+            $participant = new Participant();
+            $participant->setPseudo($faker->userName());
+            $participant->setPassword(password_hash(($faker->password(8).'@'.rand(0,9)), PASSWORD_DEFAULT));
+            $participant->setNom($faker->lastName());
+            $participant->setPrenom($faker->firstName());
+            $participant->setTelephone($faker->phoneNumber());
+            $participant->setMail($faker->email());
+            $participant->setCampus($campusDispo[rand(0, count($campusDispo) - 1)]);
+
+            $manager->persist($participant);
+            $this->addReference('participant_' . ($i+3), $participant);
+            $this->addReference('organisateur_' . ($i+3), $participant);
+
+
+        }
 
         $manager->flush();
     }

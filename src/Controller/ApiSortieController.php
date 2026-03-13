@@ -124,7 +124,7 @@ final class ApiSortieController extends AbstractController
                     ];
                 }
 
-                if ($isOrga && !$isCreation && !$hasStarted) {
+                if (!$isCreation && !$hasStarted && ($isOrga || $this->isGranted('ROLE_ADMIN'))) {
                     $actions[] = [
                         'key' => 'cancel',
                         'label' => 'Annuler',

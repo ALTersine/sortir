@@ -60,7 +60,8 @@ final class AdminAndUserController extends AbstractController
             $participants = $participantRepository->findAll();
         }
 
-        return $this->render('admin/list_participants.html.twig', [
+
+        return $this->render('admin/participant/list_participants.html.twig', [
             'participants' => $participants,
             'titleAndH1' => 'Liste des participants',
             'search' => $search,
@@ -126,7 +127,7 @@ final class AdminAndUserController extends AbstractController
         }
 
 
-        return $this->render('admin/create_participant.html.twig', [
+        return $this->render('admin/participant/create_participant.html.twig', [
             'participants' => $participant,
             'formParticipant' => $form->createView(),
             'titleAndH1' => 'Créer un participant',

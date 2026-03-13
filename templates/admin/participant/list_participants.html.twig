@@ -6,7 +6,7 @@
 
 {% block section %}
     <h1 class="text-center">Gérer les participants</h1>
-    {% include 'admin/filter_participant.html.twig' %}
+    {% include 'admin/participant/filter_participant.html.twig' %}
     <table class="table-sm table-bordered">
         <thead>
         <tr>
@@ -27,7 +27,9 @@
                 <td> {{ participant.telephone }} </td>
                 <td>
                     <a href="{{ path('app_admin_admin_update',{id:participant.id}) }}">Modifier</a>
-                    <a href="{{ path('app_admin_participant_disabled',{id:participant.id}) }}">Supprimer</a>
+                    {% if 'ROLE_ADMIN' not in participant.roles %}
+                        <a href="{{ path('app_admin_participant_disabled',{id:participant.id}) }}">Supprimer</a>
+                    {% endif %}
                 </td>
                 <td>
                     {% if participant.actif %}
