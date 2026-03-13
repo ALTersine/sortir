@@ -141,9 +141,6 @@ final class SortieController extends AbstractController
                 'cpVilleOrigine' => $defaultLieu->getVille()->getCodePostal(),
             ]);
 
-            /* N'existe plus suite au passage par api
-             * $lieuManager->setLieuInput($form, $sortie);*/
-
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
